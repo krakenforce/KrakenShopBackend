@@ -16,11 +16,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.krakenforce.app.enums.GenderEnum;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users",
+		uniqueConstraints = {
+				@UniqueConstraint(columnNames = "username"),
+				@UniqueConstraint(columnNames = "email")
+		})
 public class Users {
 	
 	@Id
@@ -80,7 +85,7 @@ public class Users {
 	@JoinColumn(name = "user_vip_class_id")
 	private UserVipClass userVipClass;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "user_role",
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name = "role_id"))
