@@ -37,10 +37,6 @@ public class Transactions {
 	@Column(name = "provider_fee")
 	private float provider_fee;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "wallet_id")
-	private Wallet wallet;
-	
 	@Column(name = "created_at")
 	private Timestamp createdAt;
 	

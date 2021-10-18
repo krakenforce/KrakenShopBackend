@@ -24,8 +24,8 @@ public class Payment {
 	private int id;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "user_id")
-	private Users user;
+	@JoinColumn(name = "wallet_id")
+	private Wallet wallet;
 	
 	@Column(name = "total_price")
 	private float totalPrice;

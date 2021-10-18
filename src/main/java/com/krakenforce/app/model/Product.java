@@ -48,9 +48,6 @@ public class Product {
 	@Column(name = "original_product_link")
 	private String originalProductLink;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "category_id")
-	private MainCategory category;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "service_pack_id")
@@ -61,10 +58,10 @@ public class Product {
 	private ProductInventory productInventory;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "sub_category_product",
+	@JoinTable(name = "category_product",
 				joinColumns = @JoinColumn(name = "product_id"),
-				inverseJoinColumns = @JoinColumn(name = "sub_category_id"))
-	private Set<SubCategory> subCategories;
+				inverseJoinColumns = @JoinColumn(name = "category_id"))
+	private Set<Category> categories;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "tag_product",
@@ -86,9 +83,6 @@ public class Product {
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
 	private Set<ProductComment> productComments ;
-	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
-	private Set<OrderDetail> orderDetails  ;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
 	private Set<CartItem> cartItems   ;

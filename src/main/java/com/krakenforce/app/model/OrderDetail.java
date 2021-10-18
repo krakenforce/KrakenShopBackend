@@ -26,8 +26,8 @@ public class OrderDetail {
 	private Orders order;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "product_id")
-	private Product product;
+	@JoinColumn(name = "product_game_code_id")
+	private ProductGameCode productGameCode;
 	
 	@Column(name = "quantity")
 	private int quantity;

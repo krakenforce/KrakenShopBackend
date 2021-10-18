@@ -40,6 +40,7 @@ public class ProductComment {
 	@Column(name = "status")
 	private boolean status;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "productComment")
-	private Set<CommentReply> commentReplies;
+	@ManyToOne
+	@JoinColumn(name = "parent_comment_id")
+	private ProductComment parentComment;
 }

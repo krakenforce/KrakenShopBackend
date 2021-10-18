@@ -101,18 +101,9 @@ public class Users {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	private Set<ProductComment> productComments;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-	private Set<CommentReply> commentReplies ;
-	
 	@OneToOne(mappedBy = "user")
 	private Wallet wallet;
-	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-	private Set<Payment> payments  ;
-	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-	private Set<Orders> orders;
-	
+		
 	@ManyToMany
 	@JoinTable(name = "user_favorite_product",
 			joinColumns = @JoinColumn(name = "user_id"),

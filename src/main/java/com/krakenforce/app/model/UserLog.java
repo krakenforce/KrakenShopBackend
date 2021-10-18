@@ -31,7 +31,4 @@ public class UserLog {
 	@Column(name = "event_detail")
 	private String eventDetail;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "event_type_id")
-	private EventType eventType;
 }

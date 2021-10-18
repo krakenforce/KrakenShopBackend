@@ -27,12 +27,15 @@ public class Wallet {
 	@JoinColumn(name = "user_id", referencedColumnName = "user_id")
 	private Users user;
 	
-	@Column(name = "amount")
-	private float amount;
+	@Column(name = "balance")
+	private float balance;
 	
 	@Column(name = "status")
 	private boolean status;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "wallet")
-	private Set<Transactions> transactions;
+	private Set<Payment> payments;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "wallet")
+	private Set<Orders> orders;
 }
