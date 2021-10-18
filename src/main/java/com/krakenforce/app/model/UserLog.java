@@ -30,5 +30,39 @@ public class UserLog {
 	
 	@Column(name = "event_detail")
 	private String eventDetail;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Users getUser() {
+		return user;
+	}
+
+	public void setUser(Users user) {
+		this.user = user;
+	}
+
+	public Timestamp getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Timestamp createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public String getEventDetail() {
+		return eventDetail;
+	}
+
+	public void setEventDetail(String eventDetail) {
+		this.eventDetail = eventDetail;
+	}
+	
+	
 	
 }

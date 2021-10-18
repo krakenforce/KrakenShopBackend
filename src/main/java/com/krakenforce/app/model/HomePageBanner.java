@@ -31,4 +31,46 @@ public class HomePageBanner {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "banner_type_id")
 	private BannerType bannerType;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
+	public String getApiQueryUrl() {
+		return apiQueryUrl;
+	}
+
+	public void setApiQueryUrl(String apiQueryUrl) {
+		this.apiQueryUrl = apiQueryUrl;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+	public BannerType getBannerType() {
+		return bannerType;
+	}
+
+	public void setBannerType(BannerType bannerType) {
+		this.bannerType = bannerType;
+	}
+	
+	
 }

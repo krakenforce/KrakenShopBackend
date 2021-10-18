@@ -34,4 +34,46 @@ public class UserFeedback {
 	
 	@Column(name = "detail")
 	private String detail;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Users getUser() {
+		return user;
+	}
+
+	public void setUser(Users user) {
+		this.user = user;
+	}
+
+	public Timestamp getDateTime() {
+		return dateTime;
+	}
+
+	public void setDateTime(Timestamp dateTime) {
+		this.dateTime = dateTime;
+	}
+
+	public FeedbackType getFeedbackType() {
+		return feedbackType;
+	}
+
+	public void setFeedbackType(FeedbackType feedbackType) {
+		this.feedbackType = feedbackType;
+	}
+
+	public String getDetail() {
+		return detail;
+	}
+
+	public void setDetail(String detail) {
+		this.detail = detail;
+	}
+	
+	
 }

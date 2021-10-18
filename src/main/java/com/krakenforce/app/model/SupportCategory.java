@@ -27,5 +27,39 @@ public class SupportCategory {
 	private boolean status;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "supportCategory")
-	private Set<Support> supports; 
+	private Set<Support> supports;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+	public Set<Support> getSupports() {
+		return supports;
+	}
+
+	public void setSupports(Set<Support> supports) {
+		this.supports = supports;
+	} 
+	
+	
 }

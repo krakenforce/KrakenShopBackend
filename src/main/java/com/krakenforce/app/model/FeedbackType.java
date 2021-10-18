@@ -25,5 +25,32 @@ public class FeedbackType {
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "feedbackType")
 	private Set<UserFeedback> userFeedbacks;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Set<UserFeedback> getUserFeedbacks() {
+		return userFeedbacks;
+	}
+
+	public void setUserFeedbacks(Set<UserFeedback> userFeedbacks) {
+		this.userFeedbacks = userFeedbacks;
+	}
+	
+	
+	
 	
 }

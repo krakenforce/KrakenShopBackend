@@ -32,4 +32,46 @@ public class ProductWarranty {
 	@JoinColumn(name = "product_id")
 	private Product product;
 
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getWarrantyTime() {
+		return warrantyTime;
+	}
+
+	public void setWarrantyTime(int warrantyTime) {
+		this.warrantyTime = warrantyTime;
+	}
+
+	public String getWarrantyPolicy() {
+		return warrantyPolicy;
+	}
+
+	public void setWarrantyPolicy(String warrantyPolicy) {
+		this.warrantyPolicy = warrantyPolicy;
+	}
+
+	public String getIndemnity() {
+		return indemnity;
+	}
+
+	public void setIndemnity(String indemnity) {
+		this.indemnity = indemnity;
+	}
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+	
+	
+
 }

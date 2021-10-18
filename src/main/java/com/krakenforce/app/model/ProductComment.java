@@ -1,8 +1,6 @@
 package com.krakenforce.app.model;
 
 import java.sql.Timestamp;
-import java.util.Set;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,7 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -43,4 +40,62 @@ public class ProductComment {
 	@ManyToOne
 	@JoinColumn(name = "parent_comment_id")
 	private ProductComment parentComment;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Users getUser() {
+		return user;
+	}
+
+	public void setUser(Users user) {
+		this.user = user;
+	}
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+	public Timestamp getCommentTime() {
+		return commentTime;
+	}
+
+	public void setCommentTime(Timestamp commentTime) {
+		this.commentTime = commentTime;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+	public ProductComment getParentComment() {
+		return parentComment;
+	}
+
+	public void setParentComment(ProductComment parentComment) {
+		this.parentComment = parentComment;
+	}
+	
+	
 }

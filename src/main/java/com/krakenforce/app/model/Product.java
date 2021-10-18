@@ -87,4 +87,158 @@ public class Product {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
 	private Set<CartItem> cartItems   ;
 
+	public int getProductId() {
+		return productId;
+	}
+
+	public void setProductId(int productId) {
+		this.productId = productId;
+	}
+
+	public String getProductCode() {
+		return productCode;
+	}
+
+	public void setProductCode(String productCode) {
+		this.productCode = productCode;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public float getPrice() {
+		return price;
+	}
+
+	public void setPrice(float price) {
+		this.price = price;
+	}
+
+	public float getSalePrice() {
+		return salePrice;
+	}
+
+	public void setSalePrice(float salePrice) {
+		this.salePrice = salePrice;
+	}
+
+	public String getProductDetail() {
+		return productDetail;
+	}
+
+	public void setProductDetail(String productDetail) {
+		this.productDetail = productDetail;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+	public String getThumbnailImageUrl() {
+		return thumbnailImageUrl;
+	}
+
+	public void setThumbnailImageUrl(String thumbnailImageUrl) {
+		this.thumbnailImageUrl = thumbnailImageUrl;
+	}
+
+	public String getOriginalProductLink() {
+		return originalProductLink;
+	}
+
+	public void setOriginalProductLink(String originalProductLink) {
+		this.originalProductLink = originalProductLink;
+	}
+
+	public ProductServicePack getProductServicePack() {
+		return productServicePack;
+	}
+
+	public void setProductServicePack(ProductServicePack productServicePack) {
+		this.productServicePack = productServicePack;
+	}
+
+	public ProductInventory getProductInventory() {
+		return productInventory;
+	}
+
+	public void setProductInventory(ProductInventory productInventory) {
+		this.productInventory = productInventory;
+	}
+
+	public Set<Category> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(Set<Category> categories) {
+		this.categories = categories;
+	}
+
+	public Set<Tag> getTags() {
+		return tags;
+	}
+
+	public void setTags(Set<Tag> tags) {
+		this.tags = tags;
+	}
+
+	public Set<ProductGameCode> getProductGameCodes() {
+		return productGameCodes;
+	}
+
+	public void setProductGameCodes(Set<ProductGameCode> productGameCodes) {
+		this.productGameCodes = productGameCodes;
+	}
+
+	public Set<ProductImage> getProductImages() {
+		return productImages;
+	}
+
+	public void setProductImages(Set<ProductImage> productImages) {
+		this.productImages = productImages;
+	}
+
+	public Set<ProductDetail> getProductDetails() {
+		return productDetails;
+	}
+
+	public void setProductDetails(Set<ProductDetail> productDetails) {
+		this.productDetails = productDetails;
+	}
+
+	public Set<ProductWarranty> getProductWarranties() {
+		return productWarranties;
+	}
+
+	public void setProductWarranties(Set<ProductWarranty> productWarranties) {
+		this.productWarranties = productWarranties;
+	}
+
+	public Set<ProductComment> getProductComments() {
+		return productComments;
+	}
+
+	public void setProductComments(Set<ProductComment> productComments) {
+		this.productComments = productComments;
+	}
+
+	public Set<CartItem> getCartItems() {
+		return cartItems;
+	}
+
+	public void setCartItems(Set<CartItem> cartItems) {
+		this.cartItems = cartItems;
+	}
+	
+	
+
 }

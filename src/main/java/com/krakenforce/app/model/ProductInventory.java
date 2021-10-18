@@ -35,4 +35,54 @@ public class ProductInventory {
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "productInventory")
 	private Set<Product> products;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	public float getImportPrice() {
+		return importPrice;
+	}
+
+	public void setImportPrice(float importPrice) {
+		this.importPrice = importPrice;
+	}
+
+	public Timestamp getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Timestamp createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Timestamp getModifiedAt() {
+		return modifiedAt;
+	}
+
+	public void setModifiedAt(Timestamp modifiedAt) {
+		this.modifiedAt = modifiedAt;
+	}
+
+	public Set<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(Set<Product> products) {
+		this.products = products;
+	}
+	
+	
 }
