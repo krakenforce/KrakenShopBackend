@@ -21,4 +21,30 @@ public class Tag {
 	
 	@Column(name = "status")
 	private boolean status;
+
+	public int getTagId() {
+		return tagId;
+	}
+
+	public void setTagId(int tagId) {
+		this.tagId = tagId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+	
+	
 }

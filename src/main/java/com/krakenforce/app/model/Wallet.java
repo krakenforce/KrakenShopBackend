@@ -38,4 +38,54 @@ public class Wallet {
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "wallet")
 	private Set<Orders> orders;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Users getUser() {
+		return user;
+	}
+
+	public void setUser(Users user) {
+		this.user = user;
+	}
+
+	public float getBalance() {
+		return balance;
+	}
+
+	public void setBalance(float balance) {
+		this.balance = balance;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+	public Set<Payment> getPayments() {
+		return payments;
+	}
+
+	public void setPayments(Set<Payment> payments) {
+		this.payments = payments;
+	}
+
+	public Set<Orders> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(Set<Orders> orders) {
+		this.orders = orders;
+	}
+	
+	
 }

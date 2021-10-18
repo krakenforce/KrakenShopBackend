@@ -28,4 +28,38 @@ public class BannerType {
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "bannerType")
 	private Set<HomePageBanner> homePageBanners;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+	public Set<HomePageBanner> getHomePageBanners() {
+		return homePageBanners;
+	}
+
+	public void setHomePageBanners(Set<HomePageBanner> homePageBanners) {
+		this.homePageBanners = homePageBanners;
+	}
+	
+	
 }

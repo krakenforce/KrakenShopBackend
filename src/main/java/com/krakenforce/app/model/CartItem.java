@@ -32,4 +32,46 @@ public class CartItem {
 	
 	@Column(name = "sub_total")
 	private float subTotal;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public ShoppingCart getShoppingCart() {
+		return shoppingCart;
+	}
+
+	public void setShoppingCart(ShoppingCart shoppingCart) {
+		this.shoppingCart = shoppingCart;
+	}
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	public float getSubTotal() {
+		return subTotal;
+	}
+
+	public void setSubTotal(float subTotal) {
+		this.subTotal = subTotal;
+	}
+	
+	
 }

@@ -34,4 +34,46 @@ public class ProductGameCode {
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "productGameCode")
 	private Set<OrderDetail> orderDetails;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+	public Set<OrderDetail> getOrderDetails() {
+		return orderDetails;
+	}
+
+	public void setOrderDetails(Set<OrderDetail> orderDetails) {
+		this.orderDetails = orderDetails;
+	}
+	
+	
 }

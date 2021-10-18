@@ -32,4 +32,54 @@ public class SalePromote {
 	@Column(name = "status")
 	private boolean status;
 
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public Timestamp getStartDatetime() {
+		return startDatetime;
+	}
+
+	public void setStartDatetime(Timestamp startDatetime) {
+		this.startDatetime = startDatetime;
+	}
+
+	public Timestamp getEndDatetime() {
+		return endDatetime;
+	}
+
+	public void setEndDatetime(Timestamp endDatetime) {
+		this.endDatetime = endDatetime;
+	}
+
+	public String getContentUrl() {
+		return contentUrl;
+	}
+
+	public void setContentUrl(String contentUrl) {
+		this.contentUrl = contentUrl;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+	
+	
+
 }

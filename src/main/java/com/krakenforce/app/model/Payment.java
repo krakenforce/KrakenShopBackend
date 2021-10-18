@@ -44,4 +44,70 @@ public class Payment {
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "payment" )
 	private Set<Transactions> transactions;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Wallet getWallet() {
+		return wallet;
+	}
+
+	public void setWallet(Wallet wallet) {
+		this.wallet = wallet;
+	}
+
+	public float getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(float totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	public String getCancelUrl() {
+		return cancelUrl;
+	}
+
+	public void setCancelUrl(String cancelUrl) {
+		this.cancelUrl = cancelUrl;
+	}
+
+	public String getSuccessUrl() {
+		return successUrl;
+	}
+
+	public void setSuccessUrl(String successUrl) {
+		this.successUrl = successUrl;
+	}
+
+	public Timestamp getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Timestamp createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public String getProvider() {
+		return provider;
+	}
+
+	public void setProvider(String provider) {
+		this.provider = provider;
+	}
+
+	public Set<Transactions> getTransactions() {
+		return transactions;
+	}
+
+	public void setTransactions(Set<Transactions> transactions) {
+		this.transactions = transactions;
+	}
+	
+	
 }

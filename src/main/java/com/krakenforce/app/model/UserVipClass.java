@@ -31,4 +31,46 @@ public class UserVipClass {
 	
 	@OneToMany(mappedBy = "userVipClass", fetch = FetchType.LAZY)
 	private Set<Users> usersSet;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getClassName() {
+		return className;
+	}
+
+	public void setClassName(String className) {
+		this.className = className;
+	}
+
+	public int getDiscountPercentage() {
+		return discountPercentage;
+	}
+
+	public void setDiscountPercentage(int discountPercentage) {
+		this.discountPercentage = discountPercentage;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+	public Set<Users> getUsersSet() {
+		return usersSet;
+	}
+
+	public void setUsersSet(Set<Users> usersSet) {
+		this.usersSet = usersSet;
+	}
+	
+	
 }
