@@ -1,6 +1,7 @@
 package com.krakenforce.app.model;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -89,7 +90,7 @@ public class Users {
 	@JoinTable(name = "user_role",
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private Set<Roles> roleSet;
+	private Set<Roles> roleSet = new HashSet<Roles>();
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	private Set<UserLog> userLogs;
