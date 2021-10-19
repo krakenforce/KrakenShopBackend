@@ -24,8 +24,6 @@ public class Roles {
 	@Column(name = "name")
 	private ERole name;
 	
-	@Column(name = "status")
-	private boolean status;
 
 	public int getRole_id() {
 		return role_id;
@@ -44,14 +42,6 @@ public class Roles {
 		this.name = name;
 	}
 
-	public boolean isStatus() {
-		return status;
-	}
-
-	public void setStatus(boolean status) {
-		this.status = status;
-	}
-	
 	
 	
 }

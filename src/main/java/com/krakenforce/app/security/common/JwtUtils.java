@@ -28,13 +28,17 @@ public class JwtUtils {
 	@Value("${kraken.app.jwtExpirationMs}")
 	private String jwtExpirationMs;
 	
+	
 	public String generateJwtToken(Authentication authentication) {
+		Date date1 = new Date();
+        long t1 = date1.getTime();
+				
 		UserDetailsImpl userPrinciple = (UserDetailsImpl) authentication.getPrincipal();
 		
 		return Jwts.builder()
 				.setSubject(userPrinciple.getUsername())
 				.setIssuedAt(new Date())
-				.setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+				.setExpiration(new Date(t1 + 60000))
 				.signWith(SignatureAlgorithm.HS512, jwtSecret)
 				.compact();
 	}

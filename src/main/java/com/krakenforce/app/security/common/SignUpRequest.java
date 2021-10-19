@@ -8,6 +8,7 @@ public class SignUpRequest {
 	private String email;
 	private String password;
 	private Set<String> role;
+	
 	public String getUsername() {
 		return username;
 	}
