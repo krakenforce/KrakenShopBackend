@@ -1,25 +1,36 @@
-package com.krakenforce.app.payload.response;
+package com.krakenforce.app.security.common;
 
 import java.util.List;
-
-import com.krakenforce.app.model.Roles;
 
 public class JwtResponse {
 	private String token;
 	private String tokenType = "Bearer";
-	private Long id;
+	private int id;
 	private String username;
 	private String email;
-	private List<Roles> roles;
+	private List<String> roles;
 	
 	
-	public JwtResponse(String accessToken, String type, Long id, String username, String email, List<Roles> roles) {
+	public JwtResponse(String accessToken, String type, int id, String username, String email, List<String> roles) {
 		this.token = accessToken;
 		this.id = id;
 		this.username = username;
 		this.email = email;
 		this.roles = roles;
 	}
+
+
+
+	public JwtResponse(String token, int id, String username, String email, List<String> roles) {
+		this.token = token;
+		this.id = id;
+		this.username = username;
+		this.email = email;
+		this.roles = roles;
+	}
+
+
+
 
 
 	public String getToken() {
@@ -42,12 +53,12 @@ public class JwtResponse {
 	}
 
 
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
 
 
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -72,12 +83,12 @@ public class JwtResponse {
 	}
 
 
-	public List<Roles> getRoles() {
+	public List<String> getRoles() {
 		return roles;
 	}
 
 
-	public void setRoles(List<Roles> roles) {
+	public void setRoles(List<String> roles) {
 		this.roles = roles;
 	}
 	
