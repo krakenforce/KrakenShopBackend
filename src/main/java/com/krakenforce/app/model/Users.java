@@ -98,11 +98,6 @@ public class Users {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	private Set<UserFeedback> userFeedbacks;
 	
-	@ManyToMany
-	@JoinTable(name = "department_employee",
-			joinColumns = @JoinColumn(name = "user_id"),
-			inverseJoinColumns = @JoinColumn(name = "department_id"))
-	private Set<Department> departments;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	private Set<ProductComment> productComments;
@@ -295,13 +290,6 @@ public class Users {
 		this.userFeedbacks = userFeedbacks;
 	}
 
-	public Set<Department> getDepartments() {
-		return departments;
-	}
-
-	public void setDepartments(Set<Department> departments) {
-		this.departments = departments;
-	}
 
 	public Set<ProductComment> getProductComments() {
 		return productComments;
