@@ -2,10 +2,14 @@ package com.krakenforce.app.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.krakenforce.app.enums.ERole;
 
 @Entity
 @Table(name = "roles")
@@ -16,8 +20,9 @@ public class Roles {
 	@Column(name = "role_id")
 	private int role_id;
 	
+	@Enumerated(EnumType.STRING)
 	@Column(name = "name")
-	private String name;
+	private ERole name;
 	
 	@Column(name = "status")
 	private boolean status;
@@ -30,11 +35,12 @@ public class Roles {
 		this.role_id = role_id;
 	}
 
-	public String getName() {
+	
+	public ERole getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(ERole name) {
 		this.name = name;
 	}
 

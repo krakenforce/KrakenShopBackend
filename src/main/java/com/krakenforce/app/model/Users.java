@@ -1,6 +1,7 @@
 package com.krakenforce.app.model;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -16,11 +17,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.krakenforce.app.enums.GenderEnum;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users",
+		uniqueConstraints = {
+				@UniqueConstraint(columnNames = "username"),
+				@UniqueConstraint(columnNames = "email")
+		})
 public class Users {
 	
 	@Id
@@ -80,11 +86,11 @@ public class Users {
 	@JoinColumn(name = "user_vip_class_id")
 	private UserVipClass userVipClass;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "user_role",
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private Set<Roles> roleSet;
+	private Set<Roles> roleSet = new HashSet<Roles>();
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	private Set<UserLog> userLogs;
@@ -112,6 +118,14 @@ public class Users {
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	private Set<ShoppingCart> shoppingCarts ;
+
+	
+
+	public Users(String username, String email, String hashPassword) {
+		this.username = username;
+		this.email = email;
+		this.hashPassword = hashPassword;
+	}
 
 	public int getUserId() {
 		return userId;
