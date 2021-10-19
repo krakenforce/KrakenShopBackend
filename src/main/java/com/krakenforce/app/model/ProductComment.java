@@ -37,7 +37,7 @@ public class ProductComment {
 	@Column(name = "status")
 	private boolean status;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "parent_comment_id")
 	private ProductComment parentComment;
 
