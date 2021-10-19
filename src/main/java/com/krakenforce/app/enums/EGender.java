@@ -1,5 +1,5 @@
 package com.krakenforce.app.enums;
 
-public enum GenderEnum {
+public enum EGender {
 	FEMALE, MALE, OTHER;
 }

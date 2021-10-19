@@ -5,6 +5,8 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,7 +20,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import com.krakenforce.app.enums.GenderEnum;
+import com.krakenforce.app.enums.EGender;
 
 @Entity
 @Table(name = "users",
@@ -57,8 +59,9 @@ public class Users {
 	@Column(name = "identity_number")
 	private String identityNumber;
 	
+	@Enumerated(EnumType.STRING)
 	@Column(name = "gender")
-	private GenderEnum gender;
+	private EGender gender;
 	
 	@Column(name = "avatar_image_url")
 	private String avatarImageUrl;
@@ -185,11 +188,11 @@ public class Users {
 		this.identityNumber = identityNumber;
 	}
 
-	public GenderEnum getGender() {
+	public EGender getGender() {
 		return gender;
 	}
 
-	public void setGender(GenderEnum gender) {
+	public void setGender(EGender gender) {
 		this.gender = gender;
 	}
 
