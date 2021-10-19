@@ -117,7 +117,9 @@ public class Users {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	private Set<ShoppingCart> shoppingCarts ;
 
-	
+	public Users() {
+		
+	}
 
 	public Users(String username, String email, String hashPassword) {
 		this.username = username;
