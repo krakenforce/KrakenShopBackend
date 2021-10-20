@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.krakenforce.app.enums.ERole;
+import com.krakenforce.app.exception.TokenRefreshException;
+import com.krakenforce.app.model.RefreshToken;
 import com.krakenforce.app.model.Roles;
 import com.krakenforce.app.model.Users;
 import com.krakenforce.app.repository.RolesRepository;
@@ -29,7 +31,10 @@ import com.krakenforce.app.security.common.JwtUtils;
 import com.krakenforce.app.security.common.LoginRequest;
 import com.krakenforce.app.security.common.MessageResponse;
 import com.krakenforce.app.security.common.SignUpRequest;
+import com.krakenforce.app.security.common.TokenRefreshRequest;
+import com.krakenforce.app.security.common.TokenRefreshResponse;
 import com.krakenforce.app.security.services.UserDetailsImpl;
+import com.krakenforce.app.service.RefreshTokenService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -47,6 +52,9 @@ public class AuthController {
 	
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	RefreshTokenService refreshTokenService;
 	
 	@Autowired
 	JwtUtils jwtUtils;
@@ -72,7 +80,10 @@ public class AuthController {
 				.map(item -> item.getAuthority())
 				.collect(Collectors.toList());
 		
-		return ResponseEntity.ok(new JwtResponse(jwt, 
+		RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+		
+		return ResponseEntity.ok(new JwtResponse(jwt,
+										refreshToken.getToken(),
 										userDetails.getId(), 
 										userDetails.getUsername(), 
 										userDetails.getEmail(),
@@ -136,8 +147,25 @@ public class AuthController {
 		
 	}
 	
-	
-	
+	/**
+	 * use to refresh token
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("/refreshtoken")
+	  public ResponseEntity<?> refreshtoken(@RequestBody TokenRefreshRequest request) {
+	    String requestRefreshToken = request.getRefreshToken();
+
+	    return refreshTokenService.findByToken(requestRefreshToken)
+	        .map(refreshTokenService::verifyExpiration)
+	        .map(RefreshToken::getUser)
+	        .map(user -> {
+	          String token = jwtUtils.generateTokenFromUsername(user.getUsername());
+	          return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
+	        })
+	        .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
+	            "Refresh token is not in database!"));
+	  }
 	
 	
 	
