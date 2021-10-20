@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.krakenforce.app.enums.GenderEnum;
+import com.krakenforce.app.enums.EGender;
 import com.krakenforce.app.model.Product;
 import com.krakenforce.app.model.ProductComment;
 import com.krakenforce.app.model.Roles;
@@ -24,7 +24,7 @@ public class UsersDtos {
 	private String lastName;
 	private String phone;
 	private String identityNumber;
-	private GenderEnum gender;
+	private EGender gender;
 	private String avatarImageUrl;
 	private String address;
 	private String job;
@@ -46,7 +46,7 @@ public class UsersDtos {
 	}
 
 	public UsersDtos(int userId, String username, String email, String hashPassword, String passwordSalt,
-			String firstName, String lastName, String phone, String identityNumber, GenderEnum gender,
+			String firstName, String lastName, String phone, String identityNumber, EGender gender,
 			String avatarImageUrl, String address, String job, boolean marriageStatus, Timestamp registeredAt,
 			Timestamp lastLogin, boolean status, UserVipClass userVipClass, Set<Roles> roleSet, Set<UserLog> userLogs,
 			Set<UserFeedback> userFeedbacks, Set<ProductComment> productComments, Wallet wallet, Set<Product> products,
@@ -151,11 +151,11 @@ public class UsersDtos {
 		this.identityNumber = identityNumber;
 	}
 
-	public GenderEnum getGender() {
+	public EGender getGender() {
 		return gender;
 	}
 
-	public void setGender(GenderEnum gender) {
+	public void setGender(EGender gender) {
 		this.gender = gender;
 	}
 
