@@ -3,6 +3,7 @@ package com.krakenforce.app.repository;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -36,4 +37,19 @@ PagingAndSortingRepository<Users, Integer>{
 	 */
 	Boolean existsByEmail(String email);
 	
+	/**
+	 * find user by reset password token
+	 * @param token
+	 * @return
+	 */
+	@Query("SELECT u FROM Users u WHERE u.resetPasswordToken = ?1")
+	Optional<Users> FindByResetPasswordToken(String resetPasswordToken);
+	
+	/**
+	 * find user by email;
+	 * @param email
+	 * @return
+	 */
+	@Query("SELECT u FROM Users u WHERE u.email = ?1")
+	Users FindByEmail(String email);
 }
