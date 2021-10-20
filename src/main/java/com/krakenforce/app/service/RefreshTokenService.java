@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.krakenforce.app.exception.TokenRefreshException;
 import com.krakenforce.app.model.RefreshToken;
@@ -14,6 +15,7 @@ import com.krakenforce.app.repository.RefreshTokenRepository;
 import com.krakenforce.app.repository.UsersRepository;
 
 @Service
+@Transactional
 public class RefreshTokenService {
 	
 	@Value("${kraken.app.jwtRefreshExpirationMs}")
@@ -35,7 +37,6 @@ public class RefreshTokenService {
 		refreshToken.setUser(usersRepository.findById(userId).get());
 		refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenDurationMs));
 		refreshToken.setToken(UUID.randomUUID().toString());
-		
 		refreshToken = refreshTokenRepository.save(refreshToken);
 		return refreshToken;
 	}
