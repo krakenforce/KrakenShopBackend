@@ -3,6 +3,7 @@ package com.krakenforce.app.controller;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,9 +29,9 @@ public class TestApiController {
 		return "Moderator Board";
 	}
 	
-	@GetMapping("/admin")
+	@GetMapping("/admin/{userId}")
 	@PreAuthorize("hasRole('ADMIN')")
-	public String adminAccesss() {
+	public String adminAccesss(@PathVariable("userId") int userId) {
 		return "Admin Board";
 	}
 }
