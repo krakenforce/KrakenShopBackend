@@ -78,6 +78,9 @@ public class Users {
 	@Column(name = "registered_at")
 	private Timestamp registeredAt;
 	
+	@Column(name = "reset_password_token")
+	private String resetPasswordToken;
+	
 	@Column(name = "last_login")
 	private Timestamp lastLogin;
 	
@@ -113,8 +116,8 @@ public class Users {
 			inverseJoinColumns = @JoinColumn(name = "product_id"))
 	private Set<Product> products;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-	private Set<ShoppingCart> shoppingCarts ;
+	@OneToOne(mappedBy = "user")
+	private ShoppingCart shoppingCart ;
 
 	public int getUserId() {
 		return userId;
@@ -309,13 +312,15 @@ public class Users {
 		this.products = products;
 	}
 
-	public Set<ShoppingCart> getShoppingCarts() {
-		return shoppingCarts;
+	public ShoppingCart getShoppingCart() {
+		return shoppingCart;
 	}
 
-	public void setShoppingCarts(Set<ShoppingCart> shoppingCarts) {
-		this.shoppingCarts = shoppingCarts;
+	public void setShoppingCart(ShoppingCart shoppingCart) {
+		this.shoppingCart = shoppingCart;
 	}
+
+	
 	
 	
 }
