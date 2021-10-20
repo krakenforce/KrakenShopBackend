@@ -43,7 +43,7 @@ PagingAndSortingRepository<Users, Integer>{
 	 * @return
 	 */
 	@Query("SELECT u FROM Users u WHERE u.resetPasswordToken = ?1")
-	Optional<Users> FindByResetPasswordToken(String resetPasswordToken);
+	Users FindByResetPasswordToken(String resetPasswordToken);
 	
 	/**
 	 * find user by email;
