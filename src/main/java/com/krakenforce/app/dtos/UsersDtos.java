@@ -159,6 +159,7 @@ public class UsersDtos {
 		this.gender = gender;
 	}
 
+
 	public String getAvatarImageUrl() {
 		return avatarImageUrl;
 	}
