@@ -86,6 +86,9 @@ public class Product {
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
 	private Set<CartItem> cartItems   ;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
+	private Set<ProductReview> productReviews;
 
 	public int getProductId() {
 		return productId;
@@ -237,6 +240,14 @@ public class Product {
 
 	public void setCartItems(Set<CartItem> cartItems) {
 		this.cartItems = cartItems;
+	}
+
+	public Set<ProductReview> getProductReviews() {
+		return productReviews;
+	}
+
+	public void setProductReviews(Set<ProductReview> productReviews) {
+		this.productReviews = productReviews;
 	}
 	
 	
