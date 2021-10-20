@@ -108,6 +108,9 @@ public class Users {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	private Set<ProductComment> productComments;
 	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+	private Set<ProductReview> productReviews;
+	
 	@OneToOne(mappedBy = "user")
 	private Wallet wallet;
 		
@@ -329,6 +332,22 @@ public class Users {
 
 	public void setShoppingCart(ShoppingCart shoppingCart) {
 		this.shoppingCart = shoppingCart;
+	}
+
+	public String getResetPasswordToken() {
+		return resetPasswordToken;
+	}
+
+	public void setResetPasswordToken(String resetPasswordToken) {
+		this.resetPasswordToken = resetPasswordToken;
+	}
+
+	public Set<ProductReview> getProductReviews() {
+		return productReviews;
+	}
+
+	public void setProductReviews(Set<ProductReview> productReviews) {
+		this.productReviews = productReviews;
 	}
 
 	
