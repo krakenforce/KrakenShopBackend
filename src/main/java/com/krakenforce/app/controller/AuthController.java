@@ -2,10 +2,13 @@ package com.krakenforce.app.controller;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,21 +25,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.krakenforce.app.enums.ERole;
 import com.krakenforce.app.exception.TokenRefreshException;
+import com.krakenforce.app.exception.UsersNotFoundException;
 import com.krakenforce.app.model.RefreshToken;
 import com.krakenforce.app.model.Roles;
 import com.krakenforce.app.model.Users;
 import com.krakenforce.app.repository.RolesRepository;
 import com.krakenforce.app.repository.UsersRepository;
+import com.krakenforce.app.security.common.ForgotPasswordRequest;
 import com.krakenforce.app.security.common.JwtResponse;
 import com.krakenforce.app.security.common.JwtUtils;
 import com.krakenforce.app.security.common.LoginRequest;
 import com.krakenforce.app.security.common.MessageResponse;
+import com.krakenforce.app.security.common.ResetPasswordRequest;
 import com.krakenforce.app.security.common.SignUpRequest;
 import com.krakenforce.app.security.common.TokenRefreshRequest;
 import com.krakenforce.app.security.common.TokenRefreshResponse;
 import com.krakenforce.app.security.services.UserDetailsImpl;
 import com.krakenforce.app.service.RefreshTokenService;
 import com.krakenforce.app.service.UsersService;
+
+import net.bytebuddy.utility.RandomString;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -151,12 +159,47 @@ public class AuthController {
 	public ResponseEntity<?> refreshtoken(@RequestBody TokenRefreshRequest request) {
 		String requestRefreshToken = request.getRefreshToken();
 
-		return refreshTokenService.findByToken(requestRefreshToken).map(refreshTokenService::verifyExpiration)
+		return refreshTokenService.findByToken(requestRefreshToken)
+				.map(refreshTokenService::verifyExpiration)
 				.map(RefreshToken::getUser).map(user -> {
 					String token = jwtUtils.generateTokenFromUsername(user.getUsername());
 					return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
 				})
 				.orElseThrow(() -> new TokenRefreshException(requestRefreshToken, "Refresh token is not in database!"));
 	}
+	
+	/**
+	 * use to process forgot password
+	 * @return
+	 */
+	@PostMapping("/forgot_password")
+	public ResponseEntity<?>  processForgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+		String email = forgotPasswordRequest.getEmail();
+		String token = RandomString.make(30);
+		
+		try {
+			usersService.updateResetPasswordToken(token, email);
+			return ResponseEntity.ok(null);
+		}catch(UsersNotFoundException e) {
+			throw new UsersNotFoundException("Not found user with email " +  email);
+		}
+	}
+	
+	
+	/**
+	 * use to process reset password
+	 * @return
+	 */
+	@PostMapping("/reset_password")
+	public ResponseEntity<?> processResetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest ) {
+		Users user = usersService.getByResetPasswordToken(resetPasswordRequest.getToken());
+		if(user == null) {
+			throw new UsersNotFoundException("Not found user");
+		}else {
+			usersService.updatePassword(user, resetPasswordRequest.getPassword());
+			return ResponseEntity.ok(null);
+		}
+	}
+	
 
 }
