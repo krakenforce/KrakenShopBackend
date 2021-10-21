@@ -8,7 +8,6 @@ import com.krakenforce.app.model.ProductComment;
 import com.krakenforce.app.model.ProductDetail;
 import com.krakenforce.app.model.ProductGameCode;
 import com.krakenforce.app.model.ProductImage;
-import com.krakenforce.app.model.ProductInventory;
 import com.krakenforce.app.model.ProductServicePack;
 import com.krakenforce.app.model.ProductWarranty;
 import com.krakenforce.app.model.Tag;
@@ -24,7 +23,6 @@ public class ProductDtos {
 	private String thumbnailImageUrl;
 	private String originalProductLink;
 	private ProductServicePack productServicePack;
-	private ProductInventory productInventory;
 	private Set<Category> categories;
 	private Set<Tag> tags;
 	private Set<ProductGameCode> productGameCodes;
@@ -40,7 +38,7 @@ public class ProductDtos {
 
 	public ProductDtos(int productId, String productCode, String name, float price, float salePrice,
 			String productDetail, boolean status, String thumbnailImageUrl, String originalProductLink,
-			ProductServicePack productServicePack, ProductInventory productInventory, Set<Category> categories,
+			ProductServicePack productServicePack, Set<Category> categories,
 			Set<Tag> tags, Set<ProductGameCode> productGameCodes, Set<ProductImage> productImages,
 			Set<ProductDetail> productDetails, Set<ProductWarranty> productWarranties,
 			Set<ProductComment> productComments, Set<CartItem> cartItems) {
@@ -55,7 +53,6 @@ public class ProductDtos {
 		this.thumbnailImageUrl = thumbnailImageUrl;
 		this.originalProductLink = originalProductLink;
 		this.productServicePack = productServicePack;
-		this.productInventory = productInventory;
 		this.categories = categories;
 		this.tags = tags;
 		this.productGameCodes = productGameCodes;
@@ -146,13 +143,6 @@ public class ProductDtos {
 		this.productServicePack = productServicePack;
 	}
 
-	public ProductInventory getProductInventory() {
-		return productInventory;
-	}
-
-	public void setProductInventory(ProductInventory productInventory) {
-		this.productInventory = productInventory;
-	}
 
 	public Set<Category> getCategories() {
 		return categories;
