@@ -9,5 +9,6 @@ import com.krakenforce.app.model.UserVipClass;
 @Repository
 public interface UserVipClassRepository extends JpaRepository<UserVipClass, Integer>,
 PagingAndSortingRepository<UserVipClass, Integer>{
-
+	
+	
 }
