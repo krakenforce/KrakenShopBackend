@@ -39,4 +39,6 @@ public class UsersService {
         user.setResetPasswordToken(null);
         usersRepository.save(user);
     }
+	
+	
 }
