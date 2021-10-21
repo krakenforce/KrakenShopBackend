@@ -53,9 +53,6 @@ public class Product {
 	@JoinColumn(name = "service_pack_id")
 	private ProductServicePack productServicePack;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "inventory_id")
-	private ProductInventory productInventory;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "category_product",
@@ -170,13 +167,6 @@ public class Product {
 		this.productServicePack = productServicePack;
 	}
 
-	public ProductInventory getProductInventory() {
-		return productInventory;
-	}
-
-	public void setProductInventory(ProductInventory productInventory) {
-		this.productInventory = productInventory;
-	}
 
 	public Set<Category> getCategories() {
 		return categories;
