@@ -2,15 +2,11 @@ package com.krakenforce.app.controller;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
-import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -71,9 +67,6 @@ public class AuthController {
 
 	@Autowired
 	JwtUtils jwtUtils;
-
-	@Autowired
-	private JavaMailSender mailSender;
 
 	/**
 	 * @author Toan ngo use to authenticate User when login
@@ -169,7 +162,7 @@ public class AuthController {
 	}
 	
 	/**
-	 * use to process forgot password
+	 * use to process forgot password token
 	 * @return
 	 */
 	@PostMapping("/forgot_password")
@@ -179,7 +172,7 @@ public class AuthController {
 		
 		try {
 			usersService.updateResetPasswordToken(token, email);
-			return ResponseEntity.ok(null);
+			return ResponseEntity.ok(token);
 		}catch(UsersNotFoundException e) {
 			throw new UsersNotFoundException("Not found user with email " +  email);
 		}
