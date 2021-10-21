@@ -1,5 +1,6 @@
 package com.krakenforce.app.model;
 
+import java.sql.Timestamp;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -27,6 +28,9 @@ public class ProductGameCode {
 	
 	@Column(name = "status")
 	private boolean status;
+	
+	@Column(name = "created_at")
+	private Timestamp createdAt;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "product_id")
@@ -74,6 +78,15 @@ public class ProductGameCode {
 	public void setOrderDetails(Set<OrderDetail> orderDetails) {
 		this.orderDetails = orderDetails;
 	}
+
+	public Timestamp getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Timestamp createdAt) {
+		this.createdAt = createdAt;
+	}
+	
 	
 	
 }
