@@ -29,6 +29,12 @@ public class ProductImage {
 	@JoinColumn(name = "product_id")
 	private Product product;
 
+	
+
+	public ProductImage(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
 	public int getId() {
 		return id;
 	}

@@ -1,11 +1,15 @@
 package com.krakenforce.app.security.common;
 
 public class ForgotPasswordRequest {
+	
 	private String email;
 	
 
+
+	public ForgotPasswordRequest() {
+	}
+
 	public ForgotPasswordRequest(String email) {
-		super();
 		this.email = email;
 	}
 
