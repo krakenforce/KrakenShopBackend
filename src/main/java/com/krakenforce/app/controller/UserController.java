@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -75,15 +76,14 @@ public class UserController {
 		}
 	}
 
-	@PutMapping()
+	@PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE,
+			MediaType.MULTIPART_FORM_DATA_VALUE})
 	// @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
 	public ResponseEntity<?> updateUserInfo(@RequestPart("user") Users user, @RequestPart("avatar") MultipartFile avatar) {
-
+		String fileUri = getImagePath(avatar);
 		Users selectedUser = usersRepository.findById(user.getUserId()).orElse(null);
 		if (selectedUser != null) {
-			if(avatar != null) {
-				selectedUser.setAvatarImageUrl(getImagePath(avatar));
-			}
+			user.setAvatarImageUrl(getImagePath(avatar));
 			selectedUser = user;
 			usersRepository.save(selectedUser);
 			return ResponseEntity.ok(selectedUser);
