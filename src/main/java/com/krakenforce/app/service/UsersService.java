@@ -31,6 +31,10 @@ public class UsersService {
 		return usersRepository.FindByResetPasswordToken(token);
 	}
 	
+	public Users getById(int userId) {
+		return usersRepository.findById(userId).orElse(null);
+	}
+	
 	public void updatePassword(Users user, String newPassword) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(newPassword);

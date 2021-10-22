@@ -1,10 +1,13 @@
 package com.krakenforce.app.model;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -21,6 +24,9 @@ public class Category {
 	
 	@Column(name = "status")
 	private boolean status;
+	
+	@ManyToMany(mappedBy = "categories")
+	private Set<Product> products;
 
 	public int getCategoryId() {
 		return categoryId;
@@ -44,6 +50,14 @@ public class Category {
 
 	public void setStatus(boolean status) {
 		this.status = status;
+	}
+
+	public Set<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(Set<Product> products) {
+		this.products = products;
 	}
 	
 	

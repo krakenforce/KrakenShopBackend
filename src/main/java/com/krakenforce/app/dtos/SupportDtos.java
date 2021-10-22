@@ -7,6 +7,7 @@ public class SupportDtos {
 	private String content;
 	private String contentLink;
 	private SupportCategory supportCategory;
+	private int supportCategoryId;
 	private boolean status;
 
 	public SupportDtos() {
@@ -19,6 +20,17 @@ public class SupportDtos {
 		this.content = content;
 		this.contentLink = contentLink;
 		this.supportCategory = supportCategory;
+		this.status = status;
+	}
+	
+	
+
+	public SupportDtos(int id, String content, String contentLink, int supportCategoryId,boolean status) {
+		super();
+		this.id = id;
+		this.content = content;
+		this.contentLink = contentLink;
+		this.supportCategoryId = supportCategoryId;
 		this.status = status;
 	}
 
@@ -61,6 +73,16 @@ public class SupportDtos {
 	public void setStatus(boolean status) {
 		this.status = status;
 	}
+
+	public int getSupportCategoryId() {
+		return supportCategoryId;
+	}
+
+	public void setSupportCategoryId(int supportCategoryId) {
+		this.supportCategoryId = supportCategoryId;
+	}
+	
+	
 	
 	
 }

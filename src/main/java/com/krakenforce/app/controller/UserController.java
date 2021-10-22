@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,8 +19,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.krakenforce.app.dtos.UserFeedbackDtos;
 import com.krakenforce.app.dtos.UserLogDtos;
@@ -30,6 +33,7 @@ import com.krakenforce.app.model.Users;
 import com.krakenforce.app.repository.UsersRepository;
 import com.krakenforce.app.security.common.MessageResponse;
 import com.krakenforce.app.service.FeedbackTypeService;
+import com.krakenforce.app.service.FileStorageService;
 import com.krakenforce.app.service.UserFeedbackService;
 import com.krakenforce.app.service.UserLogService;
 
@@ -42,7 +46,10 @@ public class UserController {
 	UsersRepository usersRepository;
 
 	@Autowired
-	UserLogService userLogService;
+	UserLogService userLogService;	
+	
+	@Autowired
+	FileStorageService fileStorageService;
 	
 	@Autowired
 	UserFeedbackService userFeedbackService;
@@ -68,18 +75,30 @@ public class UserController {
 		}
 	}
 
-	@PutMapping()
+	@PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE,
+			MediaType.MULTIPART_FORM_DATA_VALUE})
 	// @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-	public ResponseEntity<?> updateUserInfo(@RequestBody Users user, @RequestParam("avatar") MultipartFile avatar) {
-
+	public ResponseEntity<?> updateUserInfo(@RequestPart("user") Users user, @RequestPart("avatar") MultipartFile avatar) {
+		
+		String fileUri = getImagePath(avatar);
 		Users selectedUser = usersRepository.findById(user.getUserId()).orElse(null);
 		if (selectedUser != null) {
+			user.setAvatarImageUrl(fileUri);
 			selectedUser = user;
 			usersRepository.save(selectedUser);
 			return ResponseEntity.ok(selectedUser);
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("Not Found user"));
 		}
+	}
+	
+	public String getImagePath(MultipartFile file) {
+		String fileName = fileStorageService.storeFile(file);
+		String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+				.path("/api/files/")
+				.path(fileName)
+				.toUriString();
+		return fileDownloadUri;
 	}
 
 	@DeleteMapping()

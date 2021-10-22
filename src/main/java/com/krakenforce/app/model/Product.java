@@ -60,6 +60,9 @@ public class Product {
 				inverseJoinColumns = @JoinColumn(name = "category_id"))
 	private Set<Category> categories;
 	
+	@ManyToMany(mappedBy = "products")
+	private Set<Users> users;
+	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "tag_product",
 				joinColumns = @JoinColumn(name = "product_id"),
@@ -239,6 +242,16 @@ public class Product {
 	public void setProductReviews(Set<ProductReview> productReviews) {
 		this.productReviews = productReviews;
 	}
+
+	public Set<Users> getUsers() {
+		return users;
+	}
+
+	public void setUsers(Set<Users> users) {
+		this.users = users;
+	}
+	
+	
 	
 	
 

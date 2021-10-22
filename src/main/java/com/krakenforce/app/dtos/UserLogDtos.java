@@ -2,8 +2,6 @@ package com.krakenforce.app.dtos;
 
 import java.sql.Timestamp;
 
-import com.krakenforce.app.model.Users;
-
 public class UserLogDtos {
 	private int id;
 	private int userId;

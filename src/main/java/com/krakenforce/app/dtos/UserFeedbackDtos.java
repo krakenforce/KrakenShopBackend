@@ -2,9 +2,6 @@ package com.krakenforce.app.dtos;
 
 import java.sql.Timestamp;
 
-import com.krakenforce.app.model.FeedbackType;
-import com.krakenforce.app.model.Users;
-
 public class UserFeedbackDtos {
 	private int id;
 	private int userId;
