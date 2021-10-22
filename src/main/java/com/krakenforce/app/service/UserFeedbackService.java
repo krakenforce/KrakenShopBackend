@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.krakenforce.app.model.UserFeedback;
-import com.krakenforce.app.model.UserLog;
 import com.krakenforce.app.repository.UserFeedbackRepository;
 
 @Service
