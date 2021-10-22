@@ -7,23 +7,29 @@ import com.krakenforce.app.model.Users;
 
 public class UserFeedbackDtos {
 	private int id;
-	private Users user;
+	private int userId;
 	private Timestamp dateTime;
-	private FeedbackType feedbackType;
+	private int feedbackTypeId;
+	private String feedbackTypeName;
 	private String detail;
 
 	public UserFeedbackDtos() {
 		
 	}
+	
 
-	public UserFeedbackDtos(int id, Users user, Timestamp dateTime, FeedbackType feedbackType, String detail) {
+	public UserFeedbackDtos(int id, int userId, Timestamp dateTime, int feedbackTypeId, String feedbackTypeName,
+			String detail) {
 		super();
 		this.id = id;
-		this.user = user;
+		this.userId = userId;
 		this.dateTime = dateTime;
-		this.feedbackType = feedbackType;
+		this.feedbackTypeId = feedbackTypeId;
+		this.feedbackTypeName = feedbackTypeName;
 		this.detail = detail;
 	}
+
+
 
 	public int getId() {
 		return id;
@@ -33,12 +39,12 @@ public class UserFeedbackDtos {
 		this.id = id;
 	}
 
-	public Users getUser() {
-		return user;
+	public int getUserId() {
+		return userId;
 	}
 
-	public void setUser(Users user) {
-		this.user = user;
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 
 	public Timestamp getDateTime() {
@@ -49,12 +55,20 @@ public class UserFeedbackDtos {
 		this.dateTime = dateTime;
 	}
 
-	public FeedbackType getFeedbackType() {
-		return feedbackType;
+	public int getFeedbackTypeId() {
+		return feedbackTypeId;
 	}
 
-	public void setFeedbackType(FeedbackType feedbackType) {
-		this.feedbackType = feedbackType;
+	public void setFeedbackTypeId(int feedbackTypeId) {
+		this.feedbackTypeId = feedbackTypeId;
+	}
+
+	public String getFeedbackTypeName() {
+		return feedbackTypeName;
+	}
+
+	public void setFeedbackTypeName(String feedbackTypeName) {
+		this.feedbackTypeName = feedbackTypeName;
 	}
 
 	public String getDetail() {
@@ -64,6 +78,6 @@ public class UserFeedbackDtos {
 	public void setDetail(String detail) {
 		this.detail = detail;
 	}
-	
+
 	
 }

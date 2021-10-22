@@ -6,7 +6,7 @@ import com.krakenforce.app.model.Users;
 
 public class UserLogDtos {
 	private int id;
-	private Users user;
+	private int userId;
 	private Timestamp createdAt;
 	private String eventDetail;
 
@@ -14,10 +14,10 @@ public class UserLogDtos {
 		
 	}
 
-	public UserLogDtos(int id, Users user, Timestamp createdAt, String eventDetail) {
+	public UserLogDtos(int id, int userId, Timestamp createdAt, String eventDetail) {
 		super();
 		this.id = id;
-		this.user = user;
+		this.userId = userId;
 		this.createdAt = createdAt;
 		this.eventDetail = eventDetail;
 	}
@@ -30,12 +30,14 @@ public class UserLogDtos {
 		this.id = id;
 	}
 
-	public Users getUser() {
-		return user;
+	
+
+	public int getUserId() {
+		return userId;
 	}
 
-	public void setUser(Users user) {
-		this.user = user;
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 
 	public Timestamp getCreatedAt() {

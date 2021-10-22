@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name = "user_feedback")
 public class UserFeedback {
@@ -26,6 +28,7 @@ public class UserFeedback {
 	private Users user;
 	
 	@Column(name = "date_time")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Timestamp dateTime;
 	
 	@ManyToOne(fetch = FetchType.EAGER)

@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name = "user_log")
 public class UserLog {
@@ -21,11 +23,12 @@ public class UserLog {
 	@Column(name = "id")
 	private int id;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private Users user;
 	
 	@Column(name = "created_at")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Timestamp createdAt;
 	
 	@Column(name = "event_detail")
