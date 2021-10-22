@@ -3,9 +3,19 @@ package com.krakenforce.app.model;
 public class FileData {
 	private String filename;
     private String url;
-    private Long size;
+    
+    
 
-    public String getFilename() {
+    public FileData() {
+	
+	}
+
+	public FileData(String filename, String url) {
+		this.filename = filename;
+		this.url = url;
+	}
+
+	public String getFilename() {
         return filename;
     }
 
@@ -21,11 +31,4 @@ public class FileData {
         this.url = url;
     }
 
-    public Long getSize() {
-        return size;
-    }
-
-    public void setSize(Long size) {
-        this.size = size;
-    }
 }
