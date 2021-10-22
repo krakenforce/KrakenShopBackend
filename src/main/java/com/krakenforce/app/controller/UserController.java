@@ -12,14 +12,17 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.krakenforce.app.dtos.UserFeedbackDtos;
 import com.krakenforce.app.dtos.UserLogDtos;
@@ -30,6 +33,7 @@ import com.krakenforce.app.model.Users;
 import com.krakenforce.app.repository.UsersRepository;
 import com.krakenforce.app.security.common.MessageResponse;
 import com.krakenforce.app.service.FeedbackTypeService;
+import com.krakenforce.app.service.FileStorageService;
 import com.krakenforce.app.service.UserFeedbackService;
 import com.krakenforce.app.service.UserLogService;
 
@@ -43,6 +47,9 @@ public class UserController {
 
 	@Autowired
 	UserLogService userLogService;
+	
+	@Autowired
+	FileStorageService fileStorageService;
 	
 	@Autowired
 	UserFeedbackService userFeedbackService;
@@ -70,16 +77,28 @@ public class UserController {
 
 	@PutMapping()
 	// @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-	public ResponseEntity<?> updateUserInfo(@RequestBody Users user, @RequestParam("avatar") MultipartFile avatar) {
+	public ResponseEntity<?> updateUserInfo(@RequestPart("user") Users user, @RequestPart("avatar") MultipartFile avatar) {
 
 		Users selectedUser = usersRepository.findById(user.getUserId()).orElse(null);
 		if (selectedUser != null) {
+			if(avatar != null) {
+				selectedUser.setAvatarImageUrl(getImagePath(avatar));
+			}
 			selectedUser = user;
 			usersRepository.save(selectedUser);
 			return ResponseEntity.ok(selectedUser);
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("Not Found user"));
 		}
+	}
+	
+	public String getImagePath(MultipartFile file) {
+		String fileName = fileStorageService.storeFile(file);
+		String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+				.path("/api/files/")
+				.path(fileName)
+				.toUriString();
+		return fileDownloadUri;
 	}
 
 	@DeleteMapping()
