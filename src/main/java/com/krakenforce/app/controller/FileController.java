@@ -2,7 +2,6 @@ package com.krakenforce.app.controller;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +30,7 @@ public class FileController {
 	@Autowired
 	private FileStorageService fileStorageService;
 	
-	@PutMapping(consumes = {MediaType.APPLICATION_JSON_VALUE,
-							MediaType.MULTIPART_FORM_DATA_VALUE})
+	@PutMapping()
 	public ResponseEntity<FileResponseModel> uploadFile(@RequestParam("file") MultipartFile file){
 		String fileName = fileStorageService.storeFile(file);
 		String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()

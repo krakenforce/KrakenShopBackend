@@ -13,7 +13,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -47,7 +46,7 @@ public class UserController {
 	UsersRepository usersRepository;
 
 	@Autowired
-	UserLogService userLogService;
+	UserLogService userLogService;	
 	
 	@Autowired
 	FileStorageService fileStorageService;
@@ -80,10 +79,11 @@ public class UserController {
 			MediaType.MULTIPART_FORM_DATA_VALUE})
 	// @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
 	public ResponseEntity<?> updateUserInfo(@RequestPart("user") Users user, @RequestPart("avatar") MultipartFile avatar) {
+		
 		String fileUri = getImagePath(avatar);
 		Users selectedUser = usersRepository.findById(user.getUserId()).orElse(null);
 		if (selectedUser != null) {
-			user.setAvatarImageUrl(getImagePath(avatar));
+			user.setAvatarImageUrl(fileUri);
 			selectedUser = user;
 			usersRepository.save(selectedUser);
 			return ResponseEntity.ok(selectedUser);

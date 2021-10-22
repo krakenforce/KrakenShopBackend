@@ -13,6 +13,17 @@ public class SupportCategoryDtos {
 	public SupportCategoryDtos() {
 		
 	}
+	
+	
+
+	public SupportCategoryDtos(int id, String content, boolean status) {
+		super();
+		this.id = id;
+		this.content = content;
+		this.status = status;
+	}
+
+
 
 	public SupportCategoryDtos(int id, String content, boolean status, Set<Support> supports) {
 		super();
