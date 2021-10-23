@@ -36,6 +36,7 @@ import com.krakenforce.app.service.FeedbackTypeService;
 import com.krakenforce.app.service.FileStorageService;
 import com.krakenforce.app.service.UserFeedbackService;
 import com.krakenforce.app.service.UserLogService;
+import com.krakenforce.app.service.UsersService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -45,6 +46,9 @@ public class UserController {
 	@Autowired
 	UsersRepository usersRepository;
 
+	@Autowired
+	UsersService usersService;
+	
 	@Autowired
 	UserLogService userLogService;	
 	
@@ -59,8 +63,9 @@ public class UserController {
 
 	@GetMapping()
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<List<Users>> getAllUser() {
-		List<Users> users = usersRepository.findAll();
+	public ResponseEntity<List<Users>> getAllUser(@RequestParam(defaultValue = "0") Integer pageNo,
+			@RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "user_id") String sortBy) {
+		List<Users> users = usersService.getAllUser(pageNo, pageSize, sortBy);
 		return ResponseEntity.ok(users);
 	}
 
@@ -92,6 +97,7 @@ public class UserController {
 		}
 	}
 	
+	/*use to get Image path when upload*/
 	public String getImagePath(MultipartFile file) {
 		String fileName = fileStorageService.storeFile(file);
 		String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
