@@ -138,6 +138,24 @@ public class ProductService {
 		}
 	}
 	
+	/**
+	 * use to get product by tag id
+	 * @param tagId
+	 * @param pageNo
+	 * @param pageSize
+	 * @param sortBy
+	 * @return List<Product>
+	 */
+	public List<Product> seachProductByTag(int tagId, Integer pageNo, Integer pageSize, String sortBy){
+		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+		Page<Product> pageResult = productRepository.getProductByTag(tagId, paging);
+		if(pageResult.hasContent()) {
+			return pageResult.getContent();
+		}else {
+			return new ArrayList<Product>();
+		}
+	}
+	
 	
 	
 	

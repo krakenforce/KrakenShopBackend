@@ -28,4 +28,7 @@ PagingAndSortingRepository<Product, Integer>{
 	
 	@Query(value = "SELECT * FROM product WHERE service_pack_id = ?1", nativeQuery = true)
 	Page<Product> getProductByProductServicePack(int servicePackId, Pageable pageable);
+	
+	@Query(value = "SELECT p FROM Product p Join p.tags t WHERE t.name LIKE %?1%" )
+	Page<Product> getProductByTag(int tagId, Pageable pageable);
 }
