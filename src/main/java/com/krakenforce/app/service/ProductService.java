@@ -156,6 +156,42 @@ public class ProductService {
 		}
 	}
 	
+	/**
+	 * use to get product by category id
+	 * @param categoryId
+	 * @param pageNo
+	 * @param pageSize
+	 * @param sortBy
+	 * @return
+	 */
+	public List<Product> seachProductByCategory(int categoryId, Integer pageNo, Integer pageSize, String sortBy){
+		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+		Page<Product> pageResult = productRepository.getProductByCategory(categoryId, paging);
+		if(pageResult.hasContent()) {
+			return pageResult.getContent();
+		}else {
+			return new ArrayList<Product>();
+		}
+	}
+	
+	/**
+	 * use to get user favorite product list
+	 * @param userId
+	 * @param pageNo
+	 * @param pageSize
+	 * @param sortBy
+	 * @return List<Product>
+	 */
+	public List<Product> seachFavoriteProductByUser(int userId, Integer pageNo, Integer pageSize, String sortBy){
+		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+		Page<Product> pageResult = productRepository.getFavoriteProductByUser(userId, paging);
+		if(pageResult.hasContent()) {
+			return pageResult.getContent();
+		}else {
+			return new ArrayList<Product>();
+		}
+	}
+	
 	
 	
 	

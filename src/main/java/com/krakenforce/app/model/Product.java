@@ -64,7 +64,7 @@ public class Product {
 				inverseJoinColumns = @JoinColumn(name = "category_id"))
 	private Set<Category> categories;
 	
-	@ManyToMany(mappedBy = "products")
+	@ManyToMany(mappedBy = "favoriteProducts")
 	private Set<Users> users;
 	
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
