@@ -40,6 +40,9 @@ public class Product {
 	@Column(name = "product_detail")
 	private String productDetail;
 	
+	@Column(name = "product_warranty")
+	private String productWarranty;
+	
 	@Column(name = "status")
 	private boolean status;
 	
@@ -61,7 +64,7 @@ public class Product {
 				inverseJoinColumns = @JoinColumn(name = "category_id"))
 	private Set<Category> categories;
 	
-	@ManyToMany(mappedBy = "products")
+	@ManyToMany(mappedBy = "favoriteProducts")
 	private Set<Users> users;
 	
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -76,11 +79,6 @@ public class Product {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
 	private Set<ProductImage> productImages;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
-	private Set<ProductDetail> productDetails;
-	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
-	private Set<ProductWarranty> productWarranties;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
 	private Set<ProductComment> productComments ;
@@ -204,21 +202,6 @@ public class Product {
 		this.productImages = productImages;
 	}
 
-	public Set<ProductDetail> getProductDetails() {
-		return productDetails;
-	}
-
-	public void setProductDetails(Set<ProductDetail> productDetails) {
-		this.productDetails = productDetails;
-	}
-
-	public Set<ProductWarranty> getProductWarranties() {
-		return productWarranties;
-	}
-
-	public void setProductWarranties(Set<ProductWarranty> productWarranties) {
-		this.productWarranties = productWarranties;
-	}
 
 	public Set<ProductComment> getProductComments() {
 		return productComments;

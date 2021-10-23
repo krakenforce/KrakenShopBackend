@@ -57,4 +57,6 @@ PagingAndSortingRepository<Users, Integer>{
 	
 	@Query(value = "SELECT * FROM users WHERE username LIKE %?1%", nativeQuery = true)
 	Page<Users> findUserByUsername(String username, Pageable pageable);
+	
+	
 }

@@ -119,7 +119,7 @@ public class Users {
 	@JoinTable(name = "user_favorite_product",
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name = "product_id"))
-	private Set<Product> products;
+	private Set<Product> favoriteProducts;
 	
 	@OneToOne(mappedBy = "user")
 	private ShoppingCart shoppingCart ;
@@ -319,12 +319,13 @@ public class Users {
 		this.wallet = wallet;
 	}
 
-	public Set<Product> getProducts() {
-		return products;
+
+	public Set<Product> getFavoriteProducts() {
+		return favoriteProducts;
 	}
 
-	public void setProducts(Set<Product> products) {
-		this.products = products;
+	public void setFavoriteProducts(Set<Product> favoriteProducts) {
+		this.favoriteProducts = favoriteProducts;
 	}
 
 	public ShoppingCart getShoppingCart() {

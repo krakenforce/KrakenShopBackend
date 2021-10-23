@@ -5,11 +5,9 @@ import java.util.Set;
 import com.krakenforce.app.model.CartItem;
 import com.krakenforce.app.model.Category;
 import com.krakenforce.app.model.ProductComment;
-import com.krakenforce.app.model.ProductDetail;
 import com.krakenforce.app.model.ProductGameCode;
 import com.krakenforce.app.model.ProductImage;
 import com.krakenforce.app.model.ProductServicePack;
-import com.krakenforce.app.model.ProductWarranty;
 import com.krakenforce.app.model.Tag;
 
 public class ProductDtos {
@@ -27,10 +25,10 @@ public class ProductDtos {
 	private Set<Tag> tags;
 	private Set<ProductGameCode> productGameCodes;
 	private Set<ProductImage> productImages;
-	private Set<ProductDetail> productDetails;
-	private Set<ProductWarranty> productWarranties;
 	private Set<ProductComment> productComments ;
 	private Set<CartItem> cartItems   ;
+	
+	private Set<String> tagName;
 
 	public ProductDtos() {
 		
@@ -40,7 +38,6 @@ public class ProductDtos {
 			String productDetail, boolean status, String thumbnailImageUrl, String originalProductLink,
 			ProductServicePack productServicePack, Set<Category> categories,
 			Set<Tag> tags, Set<ProductGameCode> productGameCodes, Set<ProductImage> productImages,
-			Set<ProductDetail> productDetails, Set<ProductWarranty> productWarranties,
 			Set<ProductComment> productComments, Set<CartItem> cartItems) {
 		super();
 		this.productId = productId;
@@ -57,8 +54,6 @@ public class ProductDtos {
 		this.tags = tags;
 		this.productGameCodes = productGameCodes;
 		this.productImages = productImages;
-		this.productDetails = productDetails;
-		this.productWarranties = productWarranties;
 		this.productComments = productComments;
 		this.cartItems = cartItems;
 	}
@@ -176,22 +171,6 @@ public class ProductDtos {
 		this.productImages = productImages;
 	}
 
-	public Set<ProductDetail> getProductDetails() {
-		return productDetails;
-	}
-
-	public void setProductDetails(Set<ProductDetail> productDetails) {
-		this.productDetails = productDetails;
-	}
-
-	public Set<ProductWarranty> getProductWarranties() {
-		return productWarranties;
-	}
-
-	public void setProductWarranties(Set<ProductWarranty> productWarranties) {
-		this.productWarranties = productWarranties;
-	}
-
 	public Set<ProductComment> getProductComments() {
 		return productComments;
 	}
@@ -206,6 +185,14 @@ public class ProductDtos {
 
 	public void setCartItems(Set<CartItem> cartItems) {
 		this.cartItems = cartItems;
+	}
+
+	public Set<String> getTagName() {
+		return tagName;
+	}
+
+	public void setTagName(Set<String> tagName) {
+		this.tagName = tagName;
 	}
 	
 	

@@ -24,6 +24,10 @@ public class UsersService {
 	@Autowired
 	private UsersRepository usersRepository;
 	
+	public Users addUser(Users user) {
+		return usersRepository.save(user);
+	}
+	
 	public void updateResetPasswordToken(String token, String email) {
 		Users user = usersRepository.FindByEmail(email);
 		if(user != null) {
