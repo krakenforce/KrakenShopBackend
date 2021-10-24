@@ -18,15 +18,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.krakenforce.app.enums.ERole;
 import com.krakenforce.app.exception.TokenRefreshException;
 import com.krakenforce.app.exception.UsersNotFoundException;
 import com.krakenforce.app.model.RefreshToken;
 import com.krakenforce.app.model.Roles;
+import com.krakenforce.app.model.ShoppingCart;
 import com.krakenforce.app.model.Users;
+import com.krakenforce.app.model.Wallet;
 import com.krakenforce.app.repository.RolesRepository;
 import com.krakenforce.app.repository.UsersRepository;
 import com.krakenforce.app.security.common.ForgotPasswordRequest;
@@ -40,11 +40,13 @@ import com.krakenforce.app.security.common.TokenRefreshRequest;
 import com.krakenforce.app.security.common.TokenRefreshResponse;
 import com.krakenforce.app.security.services.UserDetailsImpl;
 import com.krakenforce.app.service.RefreshTokenService;
+import com.krakenforce.app.service.ShoppingCartService;
 import com.krakenforce.app.service.UsersService;
+import com.krakenforce.app.service.WalletService;
 
 import net.bytebuddy.utility.RandomString;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:4000", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -66,6 +68,12 @@ public class AuthController {
 
 	@Autowired
 	RefreshTokenService refreshTokenService;
+	
+	@Autowired
+	WalletService walletService;
+	
+	@Autowired
+	ShoppingCartService shoppingCartService;
 	
 
 	@Autowired
@@ -140,9 +148,24 @@ public class AuthController {
 		}
 		user.setRoleSet(roles);
 		usersRepository.save(user);
+		addCartAndWallet(user);
 
 		return ResponseEntity.ok(new MessageResponse("User registered successfully"));
 
+	}
+	
+	//use to add cart and wallet to new user
+	public void addCartAndWallet(Users user) {
+		Wallet newWallet = new Wallet();
+		newWallet.setBalance(0);
+		newWallet.setStatus(true);
+		newWallet.setUser(user);
+		walletService.add(newWallet);
+		
+		ShoppingCart shoppingCart = new ShoppingCart();
+		shoppingCart.setStatus(true);
+		shoppingCart.setUser(user);
+		shoppingCartService.add(shoppingCart);
 	}
 
 	/**

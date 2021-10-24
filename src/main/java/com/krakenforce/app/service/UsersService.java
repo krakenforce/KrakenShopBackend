@@ -90,6 +90,24 @@ public class UsersService {
 		}
 	}
 	
+	/**
+	 * use to get user list by vip class id with pagination
+	 * @param vipClassId
+	 * @param pageNo
+	 * @param pageSize
+	 * @param sortBy
+	 * @return List<User>
+	 */
+	public List<Users> getUserByVipClass(int vipClassId, Integer pageNo, Integer pageSize, String sortBy){
+		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+		Page<Users> pageResult = usersRepository.findUserByVipClass(vipClassId, paging);
+		if(pageResult.hasContent()) {
+			return pageResult.getContent();
+		}else {
+			return new ArrayList<Users>();
+		}
+	}
+	
 	
 	
 	

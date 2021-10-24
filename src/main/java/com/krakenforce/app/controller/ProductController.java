@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -25,17 +26,23 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.krakenforce.app.dtos.ProductDtos;
 import com.krakenforce.app.model.Category;
 import com.krakenforce.app.model.Product;
+import com.krakenforce.app.model.ProductComment;
+import com.krakenforce.app.model.ProductImage;
 import com.krakenforce.app.model.Tag;
+import com.krakenforce.app.model.Users;
 import com.krakenforce.app.security.common.MessageResponse;
 import com.krakenforce.app.security.common.ProductResponse;
 import com.krakenforce.app.service.CategoryService;
 import com.krakenforce.app.service.FileStorageService;
+import com.krakenforce.app.service.ProductCommentService;
+import com.krakenforce.app.service.ProductImageService;
 import com.krakenforce.app.service.ProductService;
 import com.krakenforce.app.service.TagService;
+import com.krakenforce.app.service.UsersService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/product/")
+@RequestMapping("/api/product")
 public class ProductController {
 	
 	@Autowired
@@ -48,12 +55,25 @@ public class ProductController {
 	CategoryService categoryService;
 	
 	@Autowired
+	ProductImageService productImageService;
+	
+	@Autowired
 	TagService tagService;
+	
+	@Autowired
+	UsersService usersService;
+	
+	@Autowired
+	ProductCommentService productCommentService;
+	
+	//==================================================================================
+	// PRODUCT MODULE
 	
 	@PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE,
 			MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<Product> addProduct(@RequestPart("product") ProductResponse productResponse
-			,@RequestPart("thumbnailImage") MultipartFile thumbnailImage){
+			,@RequestPart("thumbnailImage") MultipartFile thumbnailImage,
+			@RequestPart("imageList") List<MultipartFile> imageList){
 		try {
 			Set<Integer> categoryIdSet = productResponse.getCategoryIdSet();
 			Set<Category> categories = new HashSet<Category>();
@@ -73,9 +93,19 @@ public class ProductController {
 				product.setThumbnailImageUrl(getImagePath(thumbnailImage));
 			}
 			product.setTags(tags);
-			product.setCategories(categories);
-			
+			product.setCategories(categories);		
 			productService.save(product);
+			
+			if(imageList != null) {
+				for(int i = 0; i < imageList.size(); i++ ) {
+					ProductImage newImage = new ProductImage();
+					newImage.setProduct(product);
+					newImage.setImageUrl(getImagePath(imageList.get(i)));
+					newImage.setPriority(i + 1);
+					productImageService.add(newImage);
+				}
+			}
+			
 			return new ResponseEntity<Product>(product, new HttpHeaders(), HttpStatus.OK);
 			
 		}catch(Exception ex) {
@@ -93,7 +123,7 @@ public class ProductController {
 		return fileDownloadUri;
 	}
 	
-	@DeleteMapping("{productId}")
+	@DeleteMapping("/{productId}")
 	public ResponseEntity<MessageResponse> deleteProduct(@PathVariable("productId") int productId){
 		try {
 			productService.delete(productId);
@@ -303,4 +333,42 @@ public class ProductController {
 		}
 	}
 	
+	//=========================================================================================
+	// Product Comment
+	
+	@PostMapping("/comment")
+	public ResponseEntity<ProductComment> addComment(@RequestParam("userId") int userId,
+			@RequestParam("productId") int productId,
+			@RequestParam(name = "parentCommentId", defaultValue = "0") int parentCommentId,
+			@RequestBody ProductComment productComment){
+		try {
+			Users user = usersService.getById(userId);
+			Product product = productService.getById(productId);
+			ProductComment comment = productComment;
+			if(parentCommentId != 0) {
+				ProductComment parent = productCommentService.getById(parentCommentId);
+				comment.setParentComment(parent);
+			}
+			comment.setUser(user);
+			comment.setProduct(product);	
+			productCommentService.add(productComment);
+			return new ResponseEntity<ProductComment>(comment, new HttpHeaders(), HttpStatus.OK);
+			
+		}catch(Exception ex) {
+			return new ResponseEntity<ProductComment>(null, new HttpHeaders(), HttpStatus.OK);
+		}
+	}
+	
+	@GetMapping("/comment/{productId}")
+	public ResponseEntity<List<ProductComment>> getCommentByProduct(@PathVariable("productId") int productId,
+			@RequestParam(defaultValue ="0") int pageNo,
+			@RequestParam(defaultValue ="10") int pageSize,
+			@RequestParam(defaultValue ="product_id") String sortBy){
+		try {
+			List<ProductComment> list = productCommentService.getCommentByProduct(productId, pageNo, pageSize, sortBy);
+			return new ResponseEntity<List<ProductComment>>(list, new HttpHeaders(), HttpStatus.OK);
+		}catch(Exception ex) {
+			return new ResponseEntity<List<ProductComment>>(null, new HttpHeaders(), HttpStatus.OK);
+		}
+	}
 }

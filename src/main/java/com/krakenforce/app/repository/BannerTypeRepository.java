@@ -10,4 +10,5 @@ import com.krakenforce.app.model.BannerType;
 public interface BannerTypeRepository extends JpaRepository<BannerType, Integer>,
 PagingAndSortingRepository<BannerType, Integer>{
 
+	
 }

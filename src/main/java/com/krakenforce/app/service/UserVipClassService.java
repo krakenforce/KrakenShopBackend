@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.krakenforce.app.model.UserVipClass;
 import com.krakenforce.app.repository.UserVipClassRepository;
 
 @Service
@@ -12,6 +13,14 @@ public class UserVipClassService {
 	
 	@Autowired
 	private UserVipClassRepository userVipClassRepository;
+	
+	@Autowired
+	private UsersService usersService;
+	
+	public UserVipClass getById(int vipClassId) {
+		return userVipClassRepository.findById(vipClassId).orElse(null);
+	}
+	
 	
 	
 }

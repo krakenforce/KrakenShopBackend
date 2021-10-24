@@ -72,7 +72,7 @@ public class FavoriteProductController {
 	}
 	
 	@GetMapping("/{userId}")
-	public ResponseEntity<List<ProductDtos>> getProductByTag(@PathVariable("userId") int userId, 
+	public ResponseEntity<List<ProductDtos>> getFavoriteProductByUser(@PathVariable("userId") int userId, 
 			@RequestParam(defaultValue ="0") int pageNo,
 			@RequestParam(defaultValue ="10") int pageSize,
 			@RequestParam(defaultValue ="productId") String sortBy){

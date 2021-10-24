@@ -31,6 +31,10 @@ public class ProductImage {
 
 	
 
+	public ProductImage() {
+	
+	}
+
 	public ProductImage(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
