@@ -27,6 +27,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.krakenforce.app.dtos.UserFeedbackDtos;
 import com.krakenforce.app.dtos.UserLogDtos;
 import com.krakenforce.app.model.FeedbackType;
+import com.krakenforce.app.model.ProductComment;
 import com.krakenforce.app.model.UserFeedback;
 import com.krakenforce.app.model.UserLog;
 import com.krakenforce.app.model.Users;
@@ -34,6 +35,7 @@ import com.krakenforce.app.repository.UsersRepository;
 import com.krakenforce.app.security.common.MessageResponse;
 import com.krakenforce.app.service.FeedbackTypeService;
 import com.krakenforce.app.service.FileStorageService;
+import com.krakenforce.app.service.ProductCommentService;
 import com.krakenforce.app.service.UserFeedbackService;
 import com.krakenforce.app.service.UserLogService;
 import com.krakenforce.app.service.UsersService;
@@ -60,6 +62,9 @@ public class UserController {
 	
 	@Autowired
 	FeedbackTypeService feedbackTypeService;
+	
+	@Autowired
+	ProductCommentService productCommentService;
 
 	@GetMapping()
 	@PreAuthorize("hasRole('ADMIN')")
@@ -317,9 +322,23 @@ public class UserController {
 	}
 	
 	//==============================================================================================================
+	// USER COMMENT
 	/**
-	 * @category 
+	 * @category USER COMMENT
 	 */
+	
+	@GetMapping("/comment/{userId}")
+	public ResponseEntity<List<ProductComment>> getCommentByProduct(@PathVariable("userId") int userId,
+			@RequestParam(defaultValue ="0") int pageNo,
+			@RequestParam(defaultValue ="10") int pageSize,
+			@RequestParam(defaultValue ="user_id") String sortBy){
+		try {
+			List<ProductComment> list = productCommentService.getCommentByUser(userId, pageNo, pageSize, sortBy);
+			return new ResponseEntity<List<ProductComment>>(list, new HttpHeaders(), HttpStatus.OK);
+		}catch(Exception ex) {
+			return new ResponseEntity<List<ProductComment>>(null, new HttpHeaders(), HttpStatus.OK);
+		}
+	}
 	
 
 }

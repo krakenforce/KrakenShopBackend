@@ -1,5 +1,7 @@
 package com.krakenforce.app.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,5 +26,9 @@ public class HomePageBannerService {
 	
 	public HomePageBanner getById(int bannerId) {
 		return homePageBannerRepository.findById(bannerId).orElse(null);
+	}
+	
+	public List<HomePageBanner> getBannerByTypeId(int typeId){
+		return homePageBannerRepository.findBannerByType(typeId);
 	}
 }

@@ -16,4 +16,7 @@ PagingAndSortingRepository<ProductComment, Integer>{
 
 	@Query(value = "SELECT * FROM product_comment WHERE product_id = ?1", nativeQuery = true)
 	Page<ProductComment> findCommentByProduct(int productId, Pageable pageable);
+	
+	@Query(value = "SELECT * FROM product_comment WHERE user_id = ?1", nativeQuery = true)
+	Page<ProductComment> findCommentByUser(int userId, Pageable pageable);
 }

@@ -33,9 +33,35 @@ public class ProductCommentService {
 		return productCommentRepository.getById(productCommentId);
 	}
 	
+	/**
+	 * use to get comment on product with pagination
+	 * @param productId
+	 * @param pageNo
+	 * @param pageSize
+	 * @param sortBy
+	 * @return List<ProductComment>
+	 */
 	public List<ProductComment> getCommentByProduct(int productId, Integer pageNo, Integer pageSize, String sortBy){
 		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 		Page<ProductComment> pageResult = productCommentRepository.findCommentByProduct(productId, paging);
+		if(pageResult.hasContent()) {
+			return pageResult.getContent();
+		}else {
+			return new ArrayList<ProductComment>();
+		}
+	}
+	
+	/**
+	 * use to get comment on product by user with pagination
+	 * @param userId
+	 * @param pageNo
+	 * @param pageSize
+	 * @param sortBy
+	 * @return List<ProductComment>
+	 */
+	public List<ProductComment> getCommentByUser(int userId, Integer pageNo, Integer pageSize, String sortBy){
+		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+		Page<ProductComment> pageResult = productCommentRepository.findCommentByUser(userId, paging);
 		if(pageResult.hasContent()) {
 			return pageResult.getContent();
 		}else {

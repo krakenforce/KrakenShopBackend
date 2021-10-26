@@ -14,9 +14,6 @@ public class UserVipClassService {
 	@Autowired
 	private UserVipClassRepository userVipClassRepository;
 	
-	@Autowired
-	private UsersService usersService;
-	
 	public UserVipClass getById(int vipClassId) {
 		return userVipClassRepository.findById(vipClassId).orElse(null);
 	}

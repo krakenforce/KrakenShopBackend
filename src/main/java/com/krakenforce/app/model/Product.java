@@ -1,5 +1,6 @@
 package com.krakenforce.app.model;
 
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -233,6 +234,25 @@ public class Product {
 
 	public void setUsers(Set<Users> users) {
 		this.users = users;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, price, productGameCodes, productId, productReviews);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Product other = (Product) obj;
+		return Objects.equals(name, other.name) && Float.floatToIntBits(price) == Float.floatToIntBits(other.price)
+				&& Objects.equals(productGameCodes, other.productGameCodes) && productId == other.productId
+				&& Objects.equals(productReviews, other.productReviews);
 	}
 	
 	

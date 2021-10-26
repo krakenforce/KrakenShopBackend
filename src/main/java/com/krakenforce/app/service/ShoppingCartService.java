@@ -17,4 +17,8 @@ public class ShoppingCartService {
 	public ShoppingCart add(ShoppingCart cart) {
 		return shoppingCartRepository.save(cart);
 	}
+	
+	public ShoppingCart getById(int shoppingCartId) {
+		return shoppingCartRepository.findById(shoppingCartId).orElse(null);
+	}
 }

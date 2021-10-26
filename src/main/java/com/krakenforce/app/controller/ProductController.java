@@ -334,7 +334,10 @@ public class ProductController {
 	}
 	
 	//=========================================================================================
-	// Product Comment
+	// PRODUCT COMMENT
+	/**
+	 * @category PRODUCT COMMENT
+	*/
 	
 	@PostMapping("/comment")
 	public ResponseEntity<ProductComment> addComment(@RequestParam("userId") int userId,
