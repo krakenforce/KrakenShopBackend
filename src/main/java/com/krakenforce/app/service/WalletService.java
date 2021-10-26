@@ -17,4 +17,8 @@ public class WalletService {
 	public Wallet add(Wallet wallet) {
 		return walletRepository.save(wallet);
 	}
+	
+	public Wallet getById(int walletId) {
+		return walletRepository.findById(walletId).orElse(null);
+	}
 }

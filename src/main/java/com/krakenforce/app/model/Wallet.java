@@ -34,7 +34,7 @@ public class Wallet {
 	private boolean status;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "wallet")
-	private Set<Payment> payments;
+	private Set<Payments> payments;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "wallet")
 	private Set<Orders> orders;
@@ -71,11 +71,11 @@ public class Wallet {
 		this.status = status;
 	}
 
-	public Set<Payment> getPayments() {
+	public Set<Payments> getPayments() {
 		return payments;
 	}
 
-	public void setPayments(Set<Payment> payments) {
+	public void setPayments(Set<Payments> payments) {
 		this.payments = payments;
 	}
 

@@ -2,11 +2,11 @@ package com.krakenforce.app.dtos;
 
 import java.sql.Timestamp;
 
-import com.krakenforce.app.model.Payment;
+import com.krakenforce.app.model.Payments;
 
 public class TransactionsDtos {
 	private int id;
-	private Payment payment;
+	private Payments payment;
 	private String description;
 	private float total;
 	private boolean comfirms;
@@ -18,7 +18,7 @@ public class TransactionsDtos {
 		
 	}
 
-	public TransactionsDtos(int id, Payment payment, String description, float total, boolean comfirms,
+	public TransactionsDtos(int id, Payments payment, String description, float total, boolean comfirms,
 			float provider_fee, Timestamp createdAt, boolean status) {
 		super();
 		this.id = id;
@@ -39,11 +39,11 @@ public class TransactionsDtos {
 		this.id = id;
 	}
 
-	public Payment getPayment() {
+	public Payments getPayment() {
 		return payment;
 	}
 
-	public void setPayment(Payment payment) {
+	public void setPayment(Payments payment) {
 		this.payment = payment;
 	}
 
