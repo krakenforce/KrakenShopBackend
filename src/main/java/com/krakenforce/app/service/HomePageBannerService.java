@@ -31,4 +31,8 @@ public class HomePageBannerService {
 	public List<HomePageBanner> getBannerByTypeId(int typeId){
 		return homePageBannerRepository.findBannerByType(typeId);
 	}
+	
+	public List<HomePageBanner> getAll(){
+		return homePageBannerRepository.findAll();
+	}
 }

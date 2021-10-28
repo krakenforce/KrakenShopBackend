@@ -46,7 +46,7 @@ import com.krakenforce.app.service.WalletService;
 
 import net.bytebuddy.utility.RandomString;
 
-@CrossOrigin(origins = "http://localhost:4000", maxAge = 3600)
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {

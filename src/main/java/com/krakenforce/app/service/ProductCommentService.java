@@ -1,5 +1,6 @@
 package com.krakenforce.app.service;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,24 @@ public class ProductCommentService {
 	
 	public ProductComment getById(int productCommentId) {
 		return productCommentRepository.getById(productCommentId);
+	}
+	
+	
+	/**
+	 * use to get all product comment
+	 * @param pageNo
+	 * @param pageSize
+	 * @param sortBy
+	 * @return List<ProductComment>
+	 */
+	public List<ProductComment> getAllComment (Integer pageNo, Integer pageSize, String sortBy){
+		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+		Page<ProductComment> pageResult = productCommentRepository.findAll(paging);
+		if(pageResult.hasContent()) {
+			return pageResult.getContent();
+		}else {
+			return new ArrayList<ProductComment>();
+		}
 	}
 	
 	/**
@@ -68,4 +87,45 @@ public class ProductCommentService {
 			return new ArrayList<ProductComment>();
 		}
 	}
+	
+	/**
+	 * use to get commnet by time
+	 * @param startTime
+	 * @param endTime
+	 * @param pageNo
+	 * @param pageSize
+	 * @param sortBy
+	 * @return List<Comment>
+	 */
+	public List<ProductComment> getCommentByTime(Instant startTime, Instant endTime, Integer pageNo, Integer pageSize, String sortBy){
+		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+		Page<ProductComment> pageResult = productCommentRepository.findCommentByTime(startTime, endTime, paging);
+		if(pageResult.hasContent()) {
+			return pageResult.getContent();
+		}else {
+			return new ArrayList<ProductComment>();
+		}
+	}
+	
+	/**
+	 * use to get comment by user and time with pagination
+	 * @param userId
+	 * @param startTime
+	 * @param endTime
+	 * @param pageNo
+	 * @param pageSize
+	 * @param sortBy
+	 * @return List<ProductComment>
+	 */
+	public List<ProductComment> getCommentByUserAndTime(int userId, Instant startTime, Instant endTime, Integer pageNo, Integer pageSize, String sortBy){
+		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+		Page<ProductComment> pageResult = productCommentRepository.findCommentByTimeAndUser(userId, startTime, endTime, paging);
+		if(pageResult.hasContent()) {
+			return pageResult.getContent();
+		}else {
+			return new ArrayList<ProductComment>();
+		}
+	}
+	
+	
 }

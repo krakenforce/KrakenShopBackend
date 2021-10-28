@@ -1,5 +1,6 @@
 package com.krakenforce.app.controller;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -28,6 +29,7 @@ import com.krakenforce.app.model.Category;
 import com.krakenforce.app.model.Product;
 import com.krakenforce.app.model.ProductComment;
 import com.krakenforce.app.model.ProductImage;
+import com.krakenforce.app.model.ProductReview;
 import com.krakenforce.app.model.Tag;
 import com.krakenforce.app.model.Users;
 import com.krakenforce.app.security.common.MessageResponse;
@@ -36,6 +38,7 @@ import com.krakenforce.app.service.CategoryService;
 import com.krakenforce.app.service.FileStorageService;
 import com.krakenforce.app.service.ProductCommentService;
 import com.krakenforce.app.service.ProductImageService;
+import com.krakenforce.app.service.ProductReviewService;
 import com.krakenforce.app.service.ProductService;
 import com.krakenforce.app.service.TagService;
 import com.krakenforce.app.service.UsersService;
@@ -65,6 +68,9 @@ public class ProductController {
 	
 	@Autowired
 	ProductCommentService productCommentService;
+	
+	@Autowired
+	ProductReviewService productReviewService;
 	
 	//==================================================================================
 	// PRODUCT MODULE
@@ -358,20 +364,213 @@ public class ProductController {
 			return new ResponseEntity<ProductComment>(comment, new HttpHeaders(), HttpStatus.OK);
 			
 		}catch(Exception ex) {
-			return new ResponseEntity<ProductComment>(null, new HttpHeaders(), HttpStatus.OK);
+			return new ResponseEntity<ProductComment>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
-	@GetMapping("/comment/{productId}")
+	@DeleteMapping("/comment/{commentId}")
+	public ResponseEntity<MessageResponse> deleteComment(@PathVariable("commentId") int commentId){
+		try {
+			productCommentService.delete(commentId);
+			return new ResponseEntity<MessageResponse>(new MessageResponse("delete success"), new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<MessageResponse>(new MessageResponse("delete fail"), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/comment/{commentId}")
+	public ResponseEntity<ProductComment> getCommentById(@PathVariable("commentId") int commentId){
+		try {
+			ProductComment productComment = productCommentService.getById(commentId);
+			return new ResponseEntity<ProductComment>(productComment, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<ProductComment>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	
+	
+	@GetMapping("/comment")
+	public ResponseEntity<List<ProductComment>> getAllComment(@RequestParam(defaultValue ="0") int pageNo,
+			@RequestParam(defaultValue ="10") int pageSize,
+			@RequestParam(defaultValue ="id") String sortBy){
+		try {
+			List<ProductComment> list = productCommentService.getAllComment(pageNo, pageSize, sortBy);
+			return new ResponseEntity<List<ProductComment>>(list, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<List<ProductComment>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+		
+	}
+	
+	@GetMapping("/comment/product/{productId}")
 	public ResponseEntity<List<ProductComment>> getCommentByProduct(@PathVariable("productId") int productId,
 			@RequestParam(defaultValue ="0") int pageNo,
 			@RequestParam(defaultValue ="10") int pageSize,
-			@RequestParam(defaultValue ="product_id") String sortBy){
+			@RequestParam(defaultValue ="id") String sortBy){
 		try {
 			List<ProductComment> list = productCommentService.getCommentByProduct(productId, pageNo, pageSize, sortBy);
 			return new ResponseEntity<List<ProductComment>>(list, new HttpHeaders(), HttpStatus.OK);
 		}catch(Exception ex) {
-			return new ResponseEntity<List<ProductComment>>(null, new HttpHeaders(), HttpStatus.OK);
+			return new ResponseEntity<List<ProductComment>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	@GetMapping("/comment/user/{userId}")
+	public ResponseEntity<List<ProductComment>> getCommentByUser(@PathVariable("userId") int userId,
+			@RequestParam(defaultValue ="0") int pageNo,
+			@RequestParam(defaultValue ="10") int pageSize,
+			@RequestParam(defaultValue ="id") String sortBy){
+		try {
+			List<ProductComment> list = productCommentService.getCommentByUser(userId, pageNo, pageSize, sortBy);
+			return new ResponseEntity<List<ProductComment>>(list, new HttpHeaders(), HttpStatus.OK);
+		}catch(Exception ex) {
+			return new ResponseEntity<List<ProductComment>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/comment/time")
+	public ResponseEntity<List<ProductComment>> getCommentByTime(@RequestParam("startTime") Instant startTime,
+			@RequestParam("endTime") Instant endTime,
+			@RequestParam(defaultValue ="0") int pageNo,
+			@RequestParam(defaultValue ="10") int pageSize,
+			@RequestParam(defaultValue ="id") String sortBy){
+		try {
+			List<ProductComment> list = productCommentService.getCommentByTime(startTime, endTime, pageNo, pageSize, sortBy);
+			return new ResponseEntity<List<ProductComment>>(list, new HttpHeaders(), HttpStatus.OK);
+		}catch(Exception ex) {
+			return new ResponseEntity<List<ProductComment>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/comment/user_time")
+	public ResponseEntity<List<ProductComment>> getCommentByUserAndTime(@RequestParam("userId") int userId,
+			@RequestParam("startTime") Instant startTime,
+			@RequestParam("endTime") Instant endTime,
+			@RequestParam(defaultValue ="0") int pageNo,
+			@RequestParam(defaultValue ="10") int pageSize,
+			@RequestParam(defaultValue ="id") String sortBy){
+		try {
+			List<ProductComment> list = productCommentService.getCommentByUserAndTime(userId, startTime, endTime, pageNo, pageSize, sortBy);
+			return new ResponseEntity<List<ProductComment>>(list, new HttpHeaders(), HttpStatus.OK);
+		}catch(Exception ex) {
+			return new ResponseEntity<List<ProductComment>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	/// PRODUCT REVIEW MODULE
+	
+	@PostMapping("/review")
+	public ResponseEntity<ProductReview> addReview(@RequestParam("userId") int userId,
+			@RequestParam("productId") int productId,
+			@RequestBody ProductReview productReview){
+		try {
+			Users user = usersService.getById(userId);
+			Product product = productService.getById(productId);
+			productReview.setProduct(product);
+			productReview.setUser(user);
+			
+			productReviewService.add(productReview);
+			return new ResponseEntity<ProductReview>(productReview, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<ProductReview>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@DeleteMapping("/review/{reviewId}")
+	public ResponseEntity<MessageResponse> deleteReview(@PathVariable("reviewId") int reviewId){
+		try {
+			productReviewService.delete(reviewId);
+			return new ResponseEntity<MessageResponse>(new MessageResponse("delete success"), new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<MessageResponse>(new MessageResponse("delete fail"), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/review/{reviewId}")
+	public ResponseEntity<ProductReview> getReviewById(@PathVariable("reviewId") int reviewId){
+		try {
+			ProductReview productReview = productReviewService.getById(reviewId);
+			return new ResponseEntity<ProductReview>(productReview, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<ProductReview>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/review")
+	public ResponseEntity<List<ProductReview>> getAllReview(@RequestParam(defaultValue ="0") int pageNo,
+			@RequestParam(defaultValue ="10") int pageSize,
+			@RequestParam(defaultValue ="id") String sortBy){
+		try {
+			List<ProductReview> list = productReviewService.getAll(pageNo, pageSize, sortBy);
+			return new ResponseEntity<List<ProductReview>>(list, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<List<ProductReview>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+		
+	}
+	
+	@GetMapping("/review/user/{userId}")
+	public ResponseEntity<List<ProductReview>> getReviewByUser(@PathVariable("userId") int userId,
+			@RequestParam(defaultValue ="0") int pageNo,
+			@RequestParam(defaultValue ="10") int pageSize,
+			@RequestParam(defaultValue ="id") String sortBy){
+		try {
+			List<ProductReview> list = productReviewService.getByUser(userId, pageNo, pageSize, sortBy);
+			return new ResponseEntity<List<ProductReview>>(list, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<List<ProductReview>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+		
+	}
+	
+	@GetMapping("/review/product/{productId}")
+	public ResponseEntity<List<ProductReview>> getReviewByProduct(@PathVariable("productId") int productId,
+			@RequestParam(defaultValue ="0") int pageNo,
+			@RequestParam(defaultValue ="10") int pageSize,
+			@RequestParam(defaultValue ="id") String sortBy){
+		try {
+			List<ProductReview> list = productReviewService.getByProduct(productId, pageNo, pageSize, sortBy);
+			return new ResponseEntity<List<ProductReview>>(list, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<List<ProductReview>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+		
+	}
+	
+	@GetMapping("/review/time")
+	public ResponseEntity<List<ProductReview>> getReviewByUser(@RequestParam("startTime") Instant startTime,
+			@RequestParam("endTime") Instant endTime,
+			@RequestParam(defaultValue ="0") int pageNo,
+			@RequestParam(defaultValue ="10") int pageSize,
+			@RequestParam(defaultValue ="id") String sortBy){
+		try {
+			List<ProductReview> list = productReviewService.getByTime(startTime, endTime, pageNo, pageSize, sortBy);
+			return new ResponseEntity<List<ProductReview>>(list, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<List<ProductReview>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+		
+	}
+	
+	@GetMapping("/review/user_time")
+	public ResponseEntity<List<ProductReview>> getReviewByUserAndTime(@RequestParam("userId") int userId,
+			@RequestParam("startTime") Instant startTime,
+			@RequestParam("endTime") Instant endTime,
+			@RequestParam(defaultValue ="0") int pageNo,
+			@RequestParam(defaultValue ="10") int pageSize,
+			@RequestParam(defaultValue ="id") String sortBy){
+		try {
+			List<ProductReview> list = productReviewService.getByUserAndTime(userId, startTime, endTime, pageNo, pageSize, sortBy);
+			return new ResponseEntity<List<ProductReview>>(list, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<List<ProductReview>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+		
+	}
+	
+	
+	
+	
+	
 }

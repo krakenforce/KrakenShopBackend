@@ -23,7 +23,7 @@ public class Transactions {
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "payment_id")
-	private Payment payment;
+	private Payments payment;
 	
 	@Column(name = "description")
 	private String description;
@@ -51,11 +51,11 @@ public class Transactions {
 		this.id = id;
 	}
 
-	public Payment getPayment() {
+	public Payments getPayment() {
 		return payment;
 	}
 
-	public void setPayment(Payment payment) {
+	public void setPayment(Payments payment) {
 		this.payment = payment;
 	}
 

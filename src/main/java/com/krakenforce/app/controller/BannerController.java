@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.krakenforce.app.model.BannerType;
 import com.krakenforce.app.model.HomePageBanner;
+import com.krakenforce.app.model.SalePromote;
 import com.krakenforce.app.service.BannerTypeService;
 import com.krakenforce.app.service.HomePageBannerService;
+import com.krakenforce.app.service.SalePromoteService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -30,6 +32,11 @@ public class BannerController {
 	
 	@Autowired
 	HomePageBannerService homePageBannerService;
+	
+	@Autowired
+	SalePromoteService salePromoteService; 
+	
+	//Banner
 	
 	@PostMapping()
 	public ResponseEntity<HomePageBanner> addHomePageBanner(@RequestBody HomePageBanner homePageBanner,
@@ -53,4 +60,61 @@ public class BannerController {
 			return new ResponseEntity<List<HomePageBanner>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	@GetMapping()
+	public ResponseEntity<List<HomePageBanner>> getAllBanner(){
+		try {
+			List<HomePageBanner> homePageBanners = homePageBannerService.getAll();
+			return new ResponseEntity<List<HomePageBanner>>(homePageBanners, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<List<HomePageBanner>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	//SALE PROMOTE
+	
+	@PostMapping("/sale_promote")
+	public ResponseEntity<SalePromote> addSalePromote(@RequestBody SalePromote salePromote){
+		try {
+			salePromoteService.add(salePromote);
+			return new ResponseEntity<SalePromote>(salePromote, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<SalePromote>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/sale_promote/{salePromoteId}")
+	public ResponseEntity<SalePromote> getSalePromoteById(@PathVariable("salePromoteId") int salePromoteId){
+		try {
+			SalePromote salePromote = salePromoteService.getById(salePromoteId);
+			return new ResponseEntity<SalePromote>(salePromote, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<SalePromote>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/sale_promote")
+	public ResponseEntity<List<SalePromote>> getAllSalePromote(){
+		try {
+			List<SalePromote> salePromotes = salePromoteService.getAll();
+			return new ResponseEntity<List<SalePromote>>(salePromotes, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<List<SalePromote>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/sale_promote/search")
+	public ResponseEntity<List<SalePromote>> getSalePromoteByKeyword(@RequestParam("keyword") String keyword){
+		try {
+			List<SalePromote> salePromotes = salePromoteService.getByKeyword(keyword);
+			return new ResponseEntity<List<SalePromote>>(salePromotes, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<List<SalePromote>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	
+	
+	
+	
 }
