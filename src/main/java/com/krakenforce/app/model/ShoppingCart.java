@@ -28,6 +28,9 @@ public class ShoppingCart {
 	@JoinColumn(name = "user_id", referencedColumnName = "user_id")
 	private Users user;
 	
+	@Column(name = "quantity")
+	private Integer quantity;
+	
 	@Column(name = "total")
 	private float total;
 	
@@ -87,6 +90,15 @@ public class ShoppingCart {
 	public void setCartItems(Set<CartItem> cartItems) {
 		this.cartItems = cartItems;
 	}
+
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+	
 	
 	
 }

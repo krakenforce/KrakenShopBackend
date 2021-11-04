@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,9 +78,9 @@ public class ProductController {
 	
 	@PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE,
 			MediaType.MULTIPART_FORM_DATA_VALUE})
-	public ResponseEntity<Product> addProduct(@RequestPart("product") ProductResponse productResponse
-			,@RequestPart("thumbnailImage") MultipartFile thumbnailImage,
-			@RequestPart("imageList") List<MultipartFile> imageList){
+	public ResponseEntity<Product> addProduct(@RequestPart(value = "productRequest", required = true) ProductResponse productResponse
+			,@RequestPart(value = "thumbnailImage", required = false) MultipartFile thumbnailImage,
+			@RequestPart(value = "imageList", required = false) List<MultipartFile> imageList){
 		try {
 			Set<Integer> categoryIdSet = productResponse.getCategoryIdSet();
 			Set<Category> categories = new HashSet<Category>();
@@ -140,29 +141,14 @@ public class ProductController {
 	}
 	
 	@GetMapping()
-	public ResponseEntity<List<ProductDtos>> getAllProduct(@RequestParam(defaultValue ="0") int pageNo,
+	public ResponseEntity<Map<String, Object>> getAllProduct(@RequestParam(defaultValue ="0") int pageNo,
 			@RequestParam(defaultValue ="10") int pageSize,
 			@RequestParam(defaultValue ="productId") String sortBy){
 		try {
-			List<Product> productList = productService.getAllProduct(pageNo, pageSize, sortBy);
-			List<ProductDtos> dtosList = new ArrayList<ProductDtos>();
-			Set<String> tagStringSet = new HashSet<String>();		
-			for(Product item : productList) {	
-				ProductDtos dtos = new ProductDtos();
-				for (Tag tag : item.getTags()) {
-					tagStringSet.add(tag.getName());
-				}
-				dtos.setProductId(item.getProductId());
-				dtos.setName(item.getName());
-				dtos.setPrice(item.getPrice());
-				dtos.setTagName(tagStringSet);
-				dtosList.add(dtos);
-			}
-			
-			
-			return new ResponseEntity<List<ProductDtos>>(dtosList, new HttpHeaders(), HttpStatus.OK);
+			Map<String, Object> response = productService.getAllProduct(pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(response, new HttpHeaders(), HttpStatus.OK);
 		}catch(Exception ex) {
-			return new ResponseEntity<List<ProductDtos>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -185,7 +171,7 @@ public class ProductController {
 				dtos.setProductId(item.getProductId());
 				dtos.setName(item.getName());
 				dtos.setPrice(item.getPrice());
-				dtos.setTagName(tagStringSet);
+			
 				dtosList.add(dtos);
 			}
 			
@@ -197,60 +183,30 @@ public class ProductController {
 	}
 	
 	@GetMapping("/search/name")
-	public ResponseEntity<List<ProductDtos>> getProductByName(@RequestParam("productName") String productName,
+	public ResponseEntity<Map<String, Object>> getProductByName(@RequestParam("productName") String productName,
 			@RequestParam(defaultValue ="0") int pageNo,
 			@RequestParam(defaultValue ="10") int pageSize,
-			@RequestParam(defaultValue ="productId") String sortBy){
+			@RequestParam(defaultValue ="product_id") String sortBy){
 		
 		try {
-			List<Product> productList = productService.seachProductByName(productName,pageNo, pageSize, sortBy);
-			List<ProductDtos> dtosList = new ArrayList<ProductDtos>();
-			Set<String> tagStringSet = new HashSet<String>();		
-			for(Product item : productList) {	
-				ProductDtos dtos = new ProductDtos();
-				for (Tag tag : item.getTags()) {
-					tagStringSet.add(tag.getName());
-				}
-				dtos.setProductId(item.getProductId());
-				dtos.setName(item.getName());
-				dtos.setPrice(item.getPrice());
-				dtos.setTagName(tagStringSet);
-				dtosList.add(dtos);
-			}
-			
-			
-			return new ResponseEntity<List<ProductDtos>>(dtosList, new HttpHeaders(), HttpStatus.OK);
+			Map<String, Object> response = productService.seachProductByName(productName,pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(response, new HttpHeaders(), HttpStatus.OK);
 		}catch(Exception ex) {
-			return new ResponseEntity<List<ProductDtos>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
 	@GetMapping("/search/service_pack")
-	public ResponseEntity<List<ProductDtos>> getProductByName(@RequestParam("servicePackId") int servicePackId,
+	public ResponseEntity<Map<String, Object>> getProductByName(@RequestParam("servicePackId") int servicePackId,
 			@RequestParam(defaultValue ="0") int pageNo,
 			@RequestParam(defaultValue ="10") int pageSize,
-			@RequestParam(defaultValue ="productId") String sortBy){
+			@RequestParam(defaultValue ="product_id") String sortBy){
 		
 		try {
-			List<Product> productList = productService.seachProductByServicePack(servicePackId,pageNo, pageSize, sortBy);
-			List<ProductDtos> dtosList = new ArrayList<ProductDtos>();
-			Set<String> tagStringSet = new HashSet<String>();		
-			for(Product item : productList) {	
-				ProductDtos dtos = new ProductDtos();
-				for (Tag tag : item.getTags()) {
-					tagStringSet.add(tag.getName());
-				}
-				dtos.setProductId(item.getProductId());
-				dtos.setName(item.getName());
-				dtos.setPrice(item.getPrice());
-				dtos.setTagName(tagStringSet);
-				dtosList.add(dtos);
-			}
-			
-			
-			return new ResponseEntity<List<ProductDtos>>(dtosList, new HttpHeaders(), HttpStatus.OK);
+			Map<String, Object> response = productService.seachProductByServicePack(servicePackId,pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(response, new HttpHeaders(), HttpStatus.OK);
 		}catch(Exception ex) {
-			return new ResponseEntity<List<ProductDtos>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -273,7 +229,7 @@ public class ProductController {
 				dtos.setProductId(item.getProductId());
 				dtos.setName(item.getName());
 				dtos.setPrice(item.getPrice());
-				dtos.setTagName(tagStringSet);
+				
 				dtosList.add(dtos);
 			}
 			
@@ -285,57 +241,31 @@ public class ProductController {
 	}
 	
 	@GetMapping("/tag/{tagId}")
-	public ResponseEntity<List<ProductDtos>> getProductByTag(@PathVariable("tagId") int tagId, 
+	public ResponseEntity<Map<String, Object>> getProductByTag(@PathVariable("tagId") String tagId, 
 			@RequestParam(defaultValue ="0") int pageNo,
 			@RequestParam(defaultValue ="10") int pageSize,
 			@RequestParam(defaultValue ="productId") String sortBy){
 		try {
-			List<Product> productList = productService.seachProductByTag(tagId,pageNo, pageSize, sortBy);
-			List<ProductDtos> dtosList = new ArrayList<ProductDtos>();
-			Set<String> tagStringSet = new HashSet<String>();		
-			for(Product item : productList) {	
-				ProductDtos dtos = new ProductDtos();
-				for (Tag tag : item.getTags()) {
-					tagStringSet.add(tag.getName());
-				}
-				dtos.setProductId(item.getProductId());
-				dtos.setName(item.getName());
-				dtos.setPrice(item.getPrice());
-				dtos.setTagName(tagStringSet);
-				dtosList.add(dtos);
-			}
+			int id = Integer.parseInt(tagId);
+			Map<String ,Object> response = productService.seachProductByTag(id,pageNo, pageSize, sortBy);
 			
-			
-			return new ResponseEntity<List<ProductDtos>>(dtosList, new HttpHeaders(), HttpStatus.OK);
+			return new ResponseEntity<Map<String, Object>>(response, new HttpHeaders(), HttpStatus.OK);
 		}catch(Exception ex) {
-			return new ResponseEntity<List<ProductDtos>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
 	@GetMapping("/category/{categoryId}")
-	public ResponseEntity<List<ProductDtos>> getProductByCategory(@PathVariable("categoryId") int categoryId, 
+	public ResponseEntity<Map<String, Object>> getProductByCategory(@PathVariable("categoryId") String categoryId, 
 			@RequestParam(defaultValue ="0") int pageNo,
 			@RequestParam(defaultValue ="10") int pageSize,
 			@RequestParam(defaultValue ="productId") String sortBy){
 		try {
-			List<Product> productList = productService.seachProductByCategory(categoryId,pageNo, pageSize, sortBy);
-			List<ProductDtos> dtosList = new ArrayList<ProductDtos>();
-			Set<String> tagStringSet = new HashSet<String>();		
-			for(Product item : productList) {	
-				ProductDtos dtos = new ProductDtos();
-				for (Tag tag : item.getTags()) {
-					tagStringSet.add(tag.getName());
-				}
-				dtos.setProductId(item.getProductId());
-				dtos.setName(item.getName());
-				dtos.setPrice(item.getPrice());
-				dtos.setTagName(tagStringSet);
-				dtosList.add(dtos);
-			}
-				
-			return new ResponseEntity<List<ProductDtos>>(dtosList, new HttpHeaders(), HttpStatus.OK);
+			int id = Integer.parseInt(categoryId);
+			Map<String, Object> response = productService.seachProductByCategory(id,pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(response, new HttpHeaders(), HttpStatus.OK);
 		}catch(Exception ex) {
-			return new ResponseEntity<List<ProductDtos>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	

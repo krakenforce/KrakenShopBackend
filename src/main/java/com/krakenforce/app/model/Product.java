@@ -240,6 +240,15 @@ public class Product {
 	public int hashCode() {
 		return Objects.hash(name, price, productGameCodes, productId, productReviews);
 	}
+	
+
+	public String getProductWarranty() {
+		return productWarranty;
+	}
+
+	public void setProductWarranty(String productWarranty) {
+		this.productWarranty = productWarranty;
+	}
 
 	@Override
 	public boolean equals(Object obj) {

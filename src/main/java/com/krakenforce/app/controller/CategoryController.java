@@ -1,6 +1,7 @@
 package com.krakenforce.app.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.krakenforce.app.dtos.CategoryDtos;
 import com.krakenforce.app.model.Category;
 import com.krakenforce.app.security.common.MessageResponse;
 import com.krakenforce.app.service.CategoryService;
@@ -59,15 +61,25 @@ public class CategoryController {
 		}
 	}
 	
+	@GetMapping("/get_all")
+	public ResponseEntity<List<CategoryDtos>> getAll(){
+		try {
+			List<CategoryDtos> list = categoryService.getAll();
+			return new ResponseEntity<List<CategoryDtos>>(list, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<List<CategoryDtos>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@GetMapping()
-	public ResponseEntity<List<Category>> getAllCategory(@RequestParam(defaultValue ="0") int pageNo,
+	public ResponseEntity<Map<String, Object>> getAllCategory(@RequestParam(defaultValue ="0") int pageNo,
 			@RequestParam(defaultValue ="10") int pageSize,
 			@RequestParam(defaultValue ="categoryId") String sortBy){
 		try {
-			List<Category> list = categoryService.getAllCategory(pageNo, pageSize, sortBy);
-			return new ResponseEntity<List<Category>>(list, new HttpHeaders(), HttpStatus.OK);
+			Map<String, Object> response = categoryService.getAllCategory(pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(response, new HttpHeaders(), HttpStatus.OK);
 		}catch(Exception ex) {
-			return new ResponseEntity<List<Category>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -82,15 +94,15 @@ public class CategoryController {
 	}
 	
 	@GetMapping("/search")
-	public ResponseEntity<List<Category>> getAllCategoryByKeyword(@RequestParam("keyword") String keyword,
+	public ResponseEntity<Map<String, Object>> getAllCategoryByKeyword(@RequestParam("keyword") String keyword,
 			@RequestParam(defaultValue ="0") int pageNo,
 			@RequestParam(defaultValue ="10") int pageSize,
 			@RequestParam(defaultValue ="category_id") String sortBy){
 		try {
-			List<Category> list = categoryService.getAllCategoryByName(keyword, pageNo, pageSize, sortBy);
-			return new ResponseEntity<List<Category>>(list, new HttpHeaders(), HttpStatus.OK);
+			Map<String, Object> response = categoryService.getAllCategoryByName(keyword, pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(response, new HttpHeaders(), HttpStatus.OK);
 		}catch(Exception ex) {
-			return new ResponseEntity<List<Category>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 }

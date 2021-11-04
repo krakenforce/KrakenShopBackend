@@ -81,7 +81,7 @@ public class OrderController {
 	}
 	
 	@GetMapping("/search")
-	public ResponseEntity<List<Orders>> getAll(@RequestParam(defaultValue = "0") int pageNo,
+	public ResponseEntity<List<Orders>> getByTime(@RequestParam(defaultValue = "0") int pageNo,
 			@RequestParam(defaultValue = "0") int pageSize,
 			@RequestParam(defaultValue = "orderId") String sortBy,
 			@RequestParam("startTime") Instant startTime,

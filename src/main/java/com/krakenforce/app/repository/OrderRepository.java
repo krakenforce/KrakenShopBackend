@@ -19,4 +19,9 @@ PagingAndSortingRepository<Orders, Integer>{
 	
 	@Query(value = "SELECT * FROM orders WHERE order_datetime BETWEEN ?1 AND ?2", nativeQuery = true)
 	Page<Orders> findOrderByTime(Instant startTime, Instant endTime, Pageable pageable);
+	
+	@Query(value = "SELECT * FROM orders WHERE wallet_id = ?1", nativeQuery = true)
+	Page<Orders> findOrderByUser(int walletId, Pageable pageable);
+	
+	
 }
