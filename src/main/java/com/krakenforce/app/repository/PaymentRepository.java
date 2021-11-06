@@ -1,6 +1,6 @@
 package com.krakenforce.app.repository;
 
-import java.time.Instant;
+import java.sql.Timestamp;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,5 +20,5 @@ PagingAndSortingRepository<Payments, Integer>{
 	Page<Payments> findByProvider(String provider, Pageable pageable);
 	
 	@Query(value = "SELECT * FROM payment WHERE created_at BETWEEN ?1 AND ?2", nativeQuery = true)
-	Page<Payments> findByTime(Instant startTime, Instant endTime, Pageable pageable);
+	Page<Payments> findByTime(Timestamp startTime, Timestamp endTime, Pageable pageable);
 }

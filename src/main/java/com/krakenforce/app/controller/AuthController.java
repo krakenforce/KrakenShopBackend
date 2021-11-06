@@ -99,7 +99,7 @@ public class AuthController {
 		RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
 		return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(),
-				userDetails.getUsername(), userDetails.getEmail(), roles));
+				userDetails.getUsername(), userDetails.getEmail(),userDetails.getCartId(), userDetails.getWalletId(), userDetails.getWalletBalance(), userDetails.getAvatarImageUrl(), roles));
 	}
 
 	/**

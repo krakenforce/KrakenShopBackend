@@ -9,15 +9,23 @@ public class JwtResponse {
 	private int id;
 	private String username;
 	private String email;
+	private int cartId;
+	private int walletId;
+	private float walletBalance;
+	private String avatarImageUrl;
 	private List<String> roles;
 	
 	
-	public JwtResponse(String accessToken, String refreshToken, int id, String username, String email, List<String> roles) {
+	public JwtResponse(String accessToken, String refreshToken, int id, String username, String email, int cartId, int walletId, float walletBalance, String avatarImageUrl, List<String> roles) {
 		this.accessToken = accessToken;
 		this.refreshToken = refreshToken;
 		this.id = id;
 		this.username = username;
 		this.email = email;
+		this.cartId = cartId;
+		this.walletId = walletId;
+		this.walletBalance = walletBalance;
+		this.avatarImageUrl = avatarImageUrl;
 		this.roles = roles;
 	}
 
@@ -105,6 +113,63 @@ public class JwtResponse {
 	public void setRefreshToken(String refreshToken) {
 		this.refreshToken = refreshToken;
 	}
+
+
+
+	public int getCartId() {
+		return cartId;
+	}
+
+
+
+	public void setCartId(int cartId) {
+		this.cartId = cartId;
+	}
+
+
+
+	public int getWalletId() {
+		return walletId;
+	}
+
+
+
+	public void setWalletId(int walletId) {
+		this.walletId = walletId;
+	}
+
+
+
+	public float getWalletBalance() {
+		return walletBalance;
+	}
+
+
+
+	public void setWalletBalance(float walletBalance) {
+		this.walletBalance = walletBalance;
+	}
+
+
+
+	public String getAvatarImageUrl() {
+		return avatarImageUrl;
+	}
+
+
+
+	public void setAvatarImageUrl(String avatarImageUrl) {
+		this.avatarImageUrl = avatarImageUrl;
+	}
+
+	
+
+	
+	
+	
+	
+	
+	
 	
 	
 	

@@ -13,6 +13,9 @@ public class OrdersDtos {
 	private int quantity;
 	private float total;
 	private boolean status;
+	private int walletId;
+	private int userId;
+	private String username;
 	private Set<OrderDetail> orderDetails;
 
 	public OrdersDtos() {
@@ -86,6 +89,34 @@ public class OrdersDtos {
 	public void setOrderDetails(Set<OrderDetail> orderDetails) {
 		this.orderDetails = orderDetails;
 	}
+
+	public int getWalletId() {
+		return walletId;
+	}
+
+	public void setWalletId(int walletId) {
+		this.walletId = walletId;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	
+	
+	
 	
 	
 }

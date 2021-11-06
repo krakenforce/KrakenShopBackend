@@ -54,6 +54,11 @@ public class ProductService {
 		return productRepository.findById(productId).orElse(null);
 	}
 	
+	public ProductDtos getDtosById(int productId) {
+		Product product = productRepository.findById(productId).orElse(null);
+		return convertModelToDtos(product);
+	}
+	
 	/**
 	 * use to get product with pagination
 	 * @param pageNo
@@ -265,6 +270,25 @@ public class ProductService {
 		}
 		return dtosList;
 		
+	}
+	
+	public ProductDtos convertModelToDtos(Product item) {
+		ProductDtos productDtos = new ProductDtos();
+		productDtos.setProductId(item.getProductId());
+		productDtos.setProductCode(item.getProductCode());
+		productDtos.setName(item.getName());
+		productDtos.setPrice(item.getPrice());
+		productDtos.setSalePrice(item.getSalePrice());
+		productDtos.setProductServicePackId(item.getProductServicePack().getId());
+		productDtos.setProductServicePackName(item.getProductServicePack().getName());
+		productDtos.setOriginalProductLink(item.getOriginalProductLink());
+		productDtos.setCategoryChilds(convertCategory(item.getCategories()));
+		productDtos.setTagChilds(convertTag(item.getTags()));
+		productDtos.setProductDetail(item.getProductDetail());
+		productDtos.setProductWarranty(item.getProductWarranty());
+		productDtos.setStatus(item.isStatus());
+		productDtos.setThumbnailImageUrl(item.getThumbnailImageUrl());
+		return productDtos;
 	}
 	
 	public Set<CategoryChild> convertCategory(Set<Category> categories){

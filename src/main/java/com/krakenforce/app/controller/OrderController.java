@@ -1,7 +1,8 @@
 package com.krakenforce.app.controller;
 
-import java.time.Instant;
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -69,28 +70,31 @@ public class OrderController {
 	
 	
 	@GetMapping()
-	public ResponseEntity<List<Orders>> getAll(@RequestParam(defaultValue = "0") int pageNo,
-			@RequestParam(defaultValue = "0") int pageSize,
-			@RequestParam(defaultValue = "orderId") String sortBy){
+	public ResponseEntity<Map<String, Object>> getAll(@RequestParam(defaultValue = "0") int pageNo,
+			@RequestParam(defaultValue = "10") int pageSize,
+			@RequestParam(defaultValue = "id") String sortBy){
 		try {
-			List<Orders> orders = orderService.getAll(pageNo, pageSize, sortBy);
-			return new ResponseEntity<List<Orders>>(orders, new HttpHeaders(), HttpStatus.OK);
+			Map<String, Object> response = orderService.getAll(pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(response, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<List<Orders>>(null, new HttpHeaders(), HttpStatus.OK);
+			e.printStackTrace();
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
 	@GetMapping("/search")
-	public ResponseEntity<List<Orders>> getByTime(@RequestParam(defaultValue = "0") int pageNo,
-			@RequestParam(defaultValue = "0") int pageSize,
-			@RequestParam(defaultValue = "orderId") String sortBy,
-			@RequestParam("startTime") Instant startTime,
-			@RequestParam("endTime") Instant endTime){
+	public ResponseEntity<Map<String, Object>> getByTime(@RequestParam(defaultValue = "0") int pageNo,
+			@RequestParam(defaultValue = "10") int pageSize,
+			@RequestParam(defaultValue = "id") String sortBy,
+			@RequestParam("startTime") String startTime,
+			@RequestParam("endTime") String endTime){
 		try {
-			List<Orders> orders = orderService.getByTime(startTime, endTime, pageNo, pageSize, sortBy);
-			return new ResponseEntity<List<Orders>>(orders, new HttpHeaders(), HttpStatus.OK);
+			Timestamp start = Timestamp.valueOf(startTime);
+			Timestamp end = Timestamp.valueOf(endTime);
+			Map<String, Object> response = orderService.getByTime(start, end, pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(response, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<List<Orders>>(null, new HttpHeaders(), HttpStatus.OK);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -102,7 +106,7 @@ public class OrderController {
 			orderDetailService.add(orderDetail);
 			return new ResponseEntity<OrderDetail>(orderDetail, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<OrderDetail>(null, new HttpHeaders(), HttpStatus.OK);
+			return new ResponseEntity<OrderDetail>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 		
 	}
@@ -123,17 +127,21 @@ public class OrderController {
 			List<OrderDetail> orderDetails = orderDetailService.getAll();
 			return new ResponseEntity<List<OrderDetail>>(orderDetails, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<List<OrderDetail>>(null, new HttpHeaders(), HttpStatus.OK);
+			return new ResponseEntity<List<OrderDetail>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
 	@GetMapping("/order_detail/{orderId}")
-	public ResponseEntity<List<OrderDetail>> getOrderDetailByOrderId(@PathVariable("orderId") int orderId){
+	public ResponseEntity<Map<String, Object>> getOrderDetailByOrderId(@PathVariable("orderId") int orderId,
+			@RequestParam(defaultValue = "0") int pageNo,
+			@RequestParam(defaultValue = "10") int pageSize,
+			@RequestParam(defaultValue = "id") String sortBy){
 		try {
-			List<OrderDetail> orderDetails = orderDetailService.getByOrderId(orderId);
-			return new ResponseEntity<List<OrderDetail>>(orderDetails, new HttpHeaders(), HttpStatus.OK);
+			Map<String, Object> orderDetails = orderDetailService.getByOrderId(orderId, pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(orderDetails, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<List<OrderDetail>>(null, new HttpHeaders(), HttpStatus.OK);
+			e.printStackTrace();
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	

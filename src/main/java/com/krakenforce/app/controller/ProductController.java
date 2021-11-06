@@ -1,5 +1,6 @@
 package com.krakenforce.app.controller;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -149,6 +150,16 @@ public class ProductController {
 			return new ResponseEntity<Map<String, Object>>(response, new HttpHeaders(), HttpStatus.OK);
 		}catch(Exception ex) {
 			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/{productId}")
+	public ResponseEntity<ProductDtos> getProductById(@PathVariable("productId") int productId){
+		try {
+			ProductDtos dtos = productService.getDtosById(productId);
+			return new ResponseEntity<ProductDtos>(dtos, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<ProductDtos>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -428,14 +439,14 @@ public class ProductController {
 	}
 	
 	@GetMapping("/review")
-	public ResponseEntity<List<ProductReview>> getAllReview(@RequestParam(defaultValue ="0") int pageNo,
+	public ResponseEntity<Map<String, Object>> getAllReview(@RequestParam(defaultValue ="0") int pageNo,
 			@RequestParam(defaultValue ="10") int pageSize,
 			@RequestParam(defaultValue ="id") String sortBy){
 		try {
-			List<ProductReview> list = productReviewService.getAll(pageNo, pageSize, sortBy);
-			return new ResponseEntity<List<ProductReview>>(list, new HttpHeaders(), HttpStatus.OK);
+			Map<String, Object> list = productReviewService.getAll(pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(list, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<List<ProductReview>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 		
 	}
@@ -469,16 +480,18 @@ public class ProductController {
 	}
 	
 	@GetMapping("/review/time")
-	public ResponseEntity<List<ProductReview>> getReviewByUser(@RequestParam("startTime") Instant startTime,
-			@RequestParam("endTime") Instant endTime,
+	public ResponseEntity<Map<String, Object>> getReviewByTime(@RequestParam("startTime") String startTime,
+			@RequestParam("endTime") String endTime,
 			@RequestParam(defaultValue ="0") int pageNo,
 			@RequestParam(defaultValue ="10") int pageSize,
 			@RequestParam(defaultValue ="id") String sortBy){
 		try {
-			List<ProductReview> list = productReviewService.getByTime(startTime, endTime, pageNo, pageSize, sortBy);
-			return new ResponseEntity<List<ProductReview>>(list, new HttpHeaders(), HttpStatus.OK);
+			Timestamp start = Timestamp.valueOf(startTime);
+			Timestamp end = Timestamp.valueOf(endTime);
+			Map<String, Object> list = productReviewService.getByTime(start, end, pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(list, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<List<ProductReview>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 		
 	}

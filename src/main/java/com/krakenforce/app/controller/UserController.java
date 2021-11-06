@@ -42,7 +42,7 @@ import com.krakenforce.app.service.UserFeedbackService;
 import com.krakenforce.app.service.UserLogService;
 import com.krakenforce.app.service.UsersService;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:4000/", maxAge = 3600)
 @RestController
 @RequestMapping("/api/user/")
 public class UserController {
@@ -69,12 +69,18 @@ public class UserController {
 	ProductCommentService productCommentService;
 
 	@GetMapping()
-//	@PreAuthorize("hasRole('ADMIN')")
+	//@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Map<String, Object>> getAllUser(@RequestParam(defaultValue = "0") Integer pageNo,
 			@RequestParam(defaultValue = "10") Integer pageSize,
 			@RequestParam(defaultValue = "userId") String sortBy) {
-		Map<String, Object> response = usersService.getAllUser(pageNo, pageSize, sortBy);	
-		return ResponseEntity.ok(response);
+		try {
+			Map<String, Object> response = usersService.getAllUser(pageNo, pageSize, sortBy);	
+			return ResponseEntity.ok(response);
+		}catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Map<String,Object>>(null, new HttpHeaders(), HttpStatus.FORBIDDEN);
+		}
+		
 	}
 	
 	@GetMapping("/search-username")
