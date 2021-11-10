@@ -133,6 +133,10 @@ public class OrderService {
 		return orderRepository.getTotalRevenue();
 	}
 	
+	public float getTotalRevenueTime(Timestamp startTime, Timestamp endTime) {
+		return orderRepository.getTotalRevenueByTime(startTime, endTime);
+	}
+	
 	public float getRevenueByTime(Timestamp startTime, Timestamp endTime) {
 		return orderRepository.getRevenueByTime(startTime, endTime);
 	}
@@ -161,6 +165,11 @@ public class OrderService {
 		return pageResult;
 	}
 	
+	public List<ProductStats> getCountOfProductByTime(Timestamp startTime, Timestamp endTime){
+		List<ProductStats> pageResult = productStatisticRepository.getProductCountByTime(startTime, endTime);
+		return pageResult;
+	}
+	
 	public List<ProductStats> getCountOfProductByUser(int userId){
 		List<ProductStats> pageResult = productStatisticRepository.getProductCountByUser(userId);
 		return pageResult;
@@ -171,8 +180,17 @@ public class OrderService {
 		return list ;
 	}
 	
+	public List<CategogyStats> getCountOfCategoryByTime(Timestamp startTime, Timestamp endTime){
+		List<CategogyStats> list = categoryStatisticRepository.getCategoryCountByTime(startTime, endTime);
+		return list ;
+	}
+	
 	public List<TagStats> getCountOfTag(){
 		return tagStatisticRepository.getTagCount();
+	}
+	
+	public List<TagStats> getCountOfTagByTime(Timestamp startTime, Timestamp endTime){
+		return tagStatisticRepository.getTagCountByTime(startTime, endTime);
 	}
 	
 	public List<UserStats> getTotalByUser(){

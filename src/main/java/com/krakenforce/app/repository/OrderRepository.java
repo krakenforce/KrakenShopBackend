@@ -27,6 +27,9 @@ PagingAndSortingRepository<Orders, Integer>{
 	@Query(value = "select round(sum(total), 2) from orders", nativeQuery = true)
 	float getTotalRevenue();
 	
+	@Query(value = "select round(sum(total), 2) from orders WHERE order_datetime BETWEEN ?1 AND ?2 ",nativeQuery = true)
+	float getTotalRevenueByTime(Timestamp startTime, Timestamp endTime);
+	
 	@Query(value = "select round(sum(total), 2) from orders WHERE order_datetime BETWEEN ?1 AND ?2", nativeQuery = true)
 	float getRevenueByTime(Timestamp startTime, Timestamp endTime);
 }
