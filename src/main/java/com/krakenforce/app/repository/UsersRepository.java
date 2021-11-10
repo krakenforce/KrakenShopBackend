@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import com.krakenforce.app.enums.ERole;
 import com.krakenforce.app.model.Users;
 
 
@@ -61,5 +62,6 @@ PagingAndSortingRepository<Users, Integer>{
 	@Query(value = "SELECT * FROM users WHERE user_vip_class_id = ?1", nativeQuery = true)
 	Page<Users> findUserByVipClass(int vipClassId, Pageable pageable);
 	
-	
+	@Query(value = "SELECT u FROM Users u JOIN u.roleSet r WHERE r.name = ?1")
+	Page<Users> findUserByRole(ERole role, Pageable pageable);
 }

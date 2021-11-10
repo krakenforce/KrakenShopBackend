@@ -22,17 +22,26 @@ public class UserDetailsImpl implements UserDetails {
 	private int id;
 	private String username;
 	private String email;
+	private int walletId;
+	private int cartId;
+	private float walletBalance;
+	private String avatarImageUrl;
 	
 	@JsonIgnore
 	private String password;
 	
 	private Collection<? extends GrantedAuthority> authorities;
 
-	public UserDetailsImpl(int id, String username, String email, String password,
+	public UserDetailsImpl(int id, String username, String email, int cartId, int walletId, float walletBalance,String avatarImageUrl,
+			String password,
 			Collection<? extends GrantedAuthority> authorities) {
 		this.id = id;
 		this.username = username;
 		this.email = email;
+		this.cartId = cartId;
+		this.walletId = walletId;
+		this.walletBalance = walletBalance;
+		this.avatarImageUrl = avatarImageUrl;
 		this.password = password;
 		this.authorities = authorities;
 	}
@@ -45,6 +54,10 @@ public class UserDetailsImpl implements UserDetails {
 					user.getUserId(),
 					user.getUsername(),
 					user.getEmail(),
+					user.getShoppingCart().getId(),
+					user.getWallet().getId(),
+					user.getWallet().getBalance(),
+					user.getAvatarImageUrl(),
 					user.getHashPassword(),
 					authorities				
 				);
@@ -57,6 +70,22 @@ public class UserDetailsImpl implements UserDetails {
 	}
 	
 	
+
+	public int getWalletId() {
+		return walletId;
+	}
+
+	public void setWalletId(int walletId) {
+		this.walletId = walletId;
+	}
+
+	public int getCartId() {
+		return cartId;
+	}
+
+	public void setCartId(int cartId) {
+		this.cartId = cartId;
+	}
 
 	public int getId() {
 		return id;
@@ -110,6 +139,26 @@ public class UserDetailsImpl implements UserDetails {
 		return true;
 	}
 	
+	
+	
+	public float getWalletBalance() {
+		return walletBalance;
+	}
+
+	public void setWalletBalance(float walletBalance) {
+		this.walletBalance = walletBalance;
+	}
+	
+	
+
+	public String getAvatarImageUrl() {
+		return avatarImageUrl;
+	}
+
+	public void setAvatarImageUrl(String avatarImageUrl) {
+		this.avatarImageUrl = avatarImageUrl;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if(this == obj)

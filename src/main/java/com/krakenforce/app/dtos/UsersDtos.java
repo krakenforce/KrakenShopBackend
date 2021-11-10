@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.krakenforce.app.enums.EGender;
+import com.krakenforce.app.enums.ERole;
 import com.krakenforce.app.model.Product;
 import com.krakenforce.app.model.ProductComment;
 import com.krakenforce.app.model.Roles;
@@ -38,8 +39,27 @@ public class UsersDtos {
 	private Set<UserFeedback> userFeedbacks;
 	private Set<ProductComment> productComments;
 	private Wallet wallet;
-	private Set<Product> products;
+	private int walletId;
+	private float walletBalance;
+	private Set<Product> favoriteProducts;
 	private Set<ShoppingCart> shoppingCarts ;
+	
+	private String resetPasswordToken;
+	
+	//favorite product
+	private String favoriterProductName;
+	private int favoriteProductId;
+	
+	
+	private Set<ERole> roles; 
+
+	public Set<ERole> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<ERole> roles) {
+		this.roles = roles;
+	}
 
 	public UsersDtos() {
 		
@@ -75,7 +95,7 @@ public class UsersDtos {
 		this.userFeedbacks = userFeedbacks;
 		this.productComments = productComments;
 		this.wallet = wallet;
-		this.products = products;
+		this.favoriteProducts = products;
 		this.shoppingCarts = shoppingCarts;
 	}
 
@@ -264,12 +284,14 @@ public class UsersDtos {
 		this.wallet = wallet;
 	}
 
-	public Set<Product> getProducts() {
-		return products;
+	
+
+	public Set<Product> getFavoriteProducts() {
+		return favoriteProducts;
 	}
 
-	public void setProducts(Set<Product> products) {
-		this.products = products;
+	public void setFavoriteProducts(Set<Product> favoriteProducts) {
+		this.favoriteProducts = favoriteProducts;
 	}
 
 	public Set<ShoppingCart> getShoppingCarts() {
@@ -279,6 +301,47 @@ public class UsersDtos {
 	public void setShoppingCarts(Set<ShoppingCart> shoppingCarts) {
 		this.shoppingCarts = shoppingCarts;
 	}
+
+	public int getWalletId() {
+		return walletId;
+	}
+
+	public void setWalletId(int walletId) {
+		this.walletId = walletId;
+	}
+
+	public float getWalletBalance() {
+		return walletBalance;
+	}
+
+	public void setWalletBalance(float walletBalance) {
+		this.walletBalance = walletBalance;
+	}
+
+	public String getFavoriterProductName() {
+		return favoriterProductName;
+	}
+
+	public void setFavoriterProductName(String favoriterProductName) {
+		this.favoriterProductName = favoriterProductName;
+	}
+
+	public int getFavoriteProductId() {
+		return favoriteProductId;
+	}
+
+	public void setFavoriteProductId(int favoriteProductId) {
+		this.favoriteProductId = favoriteProductId;
+	}
+
+	public String getResetPasswordToken() {
+		return resetPasswordToken;
+	}
+
+	public void setResetPasswordToken(String resetPasswordToken) {
+		this.resetPasswordToken = resetPasswordToken;
+	}
+	
 	
 	
 	

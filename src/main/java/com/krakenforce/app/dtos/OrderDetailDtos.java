@@ -8,7 +8,12 @@ import com.krakenforce.app.model.ProductGameCode;
 public class OrderDetailDtos {
 	private int id;
 	private Orders order;
+	private int orderId;
+	private String productName;
+	private int productId;
+	private int gameCodeId;
 	private ProductGameCode productGameCode;
+	private String gameCode;
 	private int quantity;
 	private float total;
 	private Timestamp createdAt;
@@ -85,6 +90,49 @@ public class OrderDetailDtos {
 	public void setStatus(boolean status) {
 		this.status = status;
 	}
+
+	public int getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(int orderId) {
+		this.orderId = orderId;
+	}
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
+	public int getProductId() {
+		return productId;
+	}
+
+	public void setProductId(int productId) {
+		this.productId = productId;
+	}
+
+	public String getGameCode() {
+		return gameCode;
+	}
+
+	public void setGameCode(String gameCode) {
+		this.gameCode = gameCode;
+	}
+
+	public int getGameCodeId() {
+		return gameCodeId;
+	}
+
+	public void setGameCodeId(int gameCodeId) {
+		this.gameCodeId = gameCodeId;
+	}
+	
+	
+	
 	
 	
 }

@@ -1,5 +1,6 @@
 package com.krakenforce.app.repository;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 
 import org.springframework.data.domain.Page;
@@ -22,10 +23,11 @@ PagingAndSortingRepository<ProductReview, Integer>{
 	Page<ProductReview> findByProduct(int productId, Pageable pageable);
 	
 	@Query(value = "SELECT * FROM product_review WHERE created_at BETWEEN ?1 AND ?2", nativeQuery = true)
-	Page<ProductReview> findByTime(Instant startTime, Instant endTime, Pageable pageable);
+	Page<ProductReview> findByTime(Timestamp startTime, Timestamp endTime, Pageable pageable);
 	
 	@Query(value = "SELECT * FROM product_review WHERE user_id = ?1 AND created_at BETWEEN ?2 AND ?3", nativeQuery = true)
 	Page<ProductReview> findByUserAndTime(int userId, Instant startTime, Instant endTime, Pageable pageable);
 	
-	
+	@Query(value = "SELECT COALESCE(AVG(star_rating), 0) from product_review WHERE product_id = ?1", nativeQuery = true)
+	Integer findAverageStarByProduct(int productId);
 }

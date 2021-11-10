@@ -8,6 +8,7 @@ public class UserFeedbackDtos {
 	private Timestamp dateTime;
 	private int feedbackTypeId;
 	private String feedbackTypeName;
+	private String username;
 	private String detail;
 
 	public UserFeedbackDtos() {
@@ -75,6 +76,18 @@ public class UserFeedbackDtos {
 	public void setDetail(String detail) {
 		this.detail = detail;
 	}
+
+
+	public String getUsername() {
+		return username;
+	}
+
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	
+	
 
 	
 }

@@ -1,6 +1,6 @@
 package com.krakenforce.app.repository;
 
-import java.time.Instant;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -24,5 +24,11 @@ PagingAndSortingRepository<Transactions, Integer>{
 	Page<Transactions> findByKeyword(String keyword, Pageable pageable);
 	
 	@Query( value = "SELECT * FROM transactions WHERE created_at BETWEEN ?1 AND ?2 ", nativeQuery = true)
-	Page<Transactions> findByTime(Instant startTime, Instant endTime, Pageable pageable );
+	Page<Transactions> findByTime(Timestamp startTime, Timestamp endTime, Pageable pageable );
+	
+	@Query(value = "select t.* from transactions as t \r\n"
+			+ "inner join payment as p on p.id = t.payment_id\r\n"
+			+ "inner join wallet as w on p.wallet_id = w.id\r\n"
+			+ "where w.id = ?1", nativeQuery = true)
+	Page<Transactions> findByWallet(int walletId, Pageable pageable);
 }

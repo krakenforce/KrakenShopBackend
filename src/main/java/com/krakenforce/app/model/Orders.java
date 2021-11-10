@@ -14,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name = "orders")
 public class Orders {
@@ -28,6 +30,7 @@ public class Orders {
 	private Wallet wallet;
 	
 	@Column(name = "order_datetime")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Timestamp orderDateTime;
 	
 	@Column(name = "quantity")

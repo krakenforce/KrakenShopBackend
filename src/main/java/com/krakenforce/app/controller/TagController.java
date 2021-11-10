@@ -1,6 +1,7 @@
 package com.krakenforce.app.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.krakenforce.app.dtos.TagDtos;
 import com.krakenforce.app.model.Tag;
 import com.krakenforce.app.security.common.MessageResponse;
 import com.krakenforce.app.service.TagService;
@@ -59,15 +61,25 @@ public class TagController {
 		}
 	}
 	
+	@GetMapping("/get_all")
+	public ResponseEntity<List<TagDtos>> getAll(){
+		try {
+			List<TagDtos> list = TagService.getAll();
+			return new ResponseEntity<List<TagDtos>>(list, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<List<TagDtos>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@GetMapping()
-	public ResponseEntity<List<Tag>> getAllTag(@RequestParam(defaultValue ="0") int pageNo,
+	public ResponseEntity<Map<String, Object>> getAllTag(@RequestParam(defaultValue ="0") int pageNo,
 			@RequestParam(defaultValue ="10") int pageSize,
 			@RequestParam(defaultValue ="tagId") String sortBy){
 		try {
-			List<Tag> list = TagService.getAllTag(pageNo, pageSize, sortBy);
-			return new ResponseEntity<List<Tag>>(list, new HttpHeaders(), HttpStatus.OK);
+			Map<String, Object> response = TagService.getAllTag(pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(response, new HttpHeaders(), HttpStatus.OK);
 		}catch(Exception ex) {
-			return new ResponseEntity<List<Tag>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -82,15 +94,15 @@ public class TagController {
 	}
 	
 	@GetMapping("/search")
-	public ResponseEntity<List<Tag>> getAllTagByKeyword(@RequestParam("keyword") String keyword,
+	public ResponseEntity<Map<String, Object>> getAllTagByKeyword(@RequestParam("keyword") String keyword,
 			@RequestParam(defaultValue ="0") int pageNo,
 			@RequestParam(defaultValue ="10") int pageSize,
 			@RequestParam(defaultValue ="tag_id") String sortBy){
 		try {
-			List<Tag> list = TagService.getAllTagByName(keyword, pageNo, pageSize, sortBy);
-			return new ResponseEntity<List<Tag>>(list, new HttpHeaders(), HttpStatus.OK);
+			Map<String, Object> response = TagService.getAllTagByName(keyword, pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(response, new HttpHeaders(), HttpStatus.OK);
 		}catch(Exception ex) {
-			return new ResponseEntity<List<Tag>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 }

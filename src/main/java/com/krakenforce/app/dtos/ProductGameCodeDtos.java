@@ -11,6 +11,8 @@ public class ProductGameCodeDtos {
 	private String code;
 	private boolean status;
 	private Product product;
+	private int productId;
+	private String productName;
 	private Set<OrderDetail> orderDetails;
 	private Timestamp createdAt;
 
@@ -84,6 +86,22 @@ public class ProductGameCodeDtos {
 
 	public void setCreatedAt(Timestamp createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	public int getProductId() {
+		return productId;
+	}
+
+	public void setProductId(int productId) {
+		this.productId = productId;
+	}
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
 	}
 	
 	

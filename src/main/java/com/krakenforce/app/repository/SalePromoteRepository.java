@@ -1,7 +1,7 @@
 package com.krakenforce.app.repository;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -12,6 +12,6 @@ public interface SalePromoteRepository extends JpaRepository<SalePromote, Intege
 PagingAndSortingRepository<SalePromote, Integer>{
 	
 	@Query(value = "SELECT * FROM sale_promote WHERE title LIKE %?1%", nativeQuery = true)
-	List<SalePromote> findByKeyword(String keyword);
+	Page<SalePromote> findByKeyword(String keyword, Pageable pageable);
 
 }

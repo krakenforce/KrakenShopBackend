@@ -7,6 +7,7 @@ import com.krakenforce.app.model.Payments;
 public class TransactionsDtos {
 	private int id;
 	private Payments payment;
+	private int paymentId;
 	private String description;
 	private float total;
 	private boolean comfirms;
@@ -94,6 +95,16 @@ public class TransactionsDtos {
 	public void setStatus(boolean status) {
 		this.status = status;
 	}
+
+	public int getPaymentId() {
+		return paymentId;
+	}
+
+	public void setPaymentId(int paymentId) {
+		this.paymentId = paymentId;
+	}
+	
+	
 	
 	
 }

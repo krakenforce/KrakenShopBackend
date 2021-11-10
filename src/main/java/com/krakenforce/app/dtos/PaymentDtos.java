@@ -9,6 +9,9 @@ import com.krakenforce.app.model.Wallet;
 public class PaymentDtos {
 	private int id;
 	private Wallet wallet;
+	private int walletId;
+	private int userId;
+	
 	private float totalPrice;
 	private String cancelUrl;
 	private String successUrl;
@@ -96,6 +99,24 @@ public class PaymentDtos {
 	public void setTransactions(Set<Transactions> transactions) {
 		this.transactions = transactions;
 	}
+
+	public int getWalletId() {
+		return walletId;
+	}
+
+	public void setWalletId(int walletId) {
+		this.walletId = walletId;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+	
+	
 	
 	
 }

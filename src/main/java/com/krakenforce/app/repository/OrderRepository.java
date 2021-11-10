@@ -1,6 +1,6 @@
 package com.krakenforce.app.repository;
 
-import java.time.Instant;
+import java.sql.Timestamp;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,5 +18,15 @@ PagingAndSortingRepository<Orders, Integer>{
 	
 	
 	@Query(value = "SELECT * FROM orders WHERE order_datetime BETWEEN ?1 AND ?2", nativeQuery = true)
-	Page<Orders> findOrderByTime(Instant startTime, Instant endTime, Pageable pageable);
+	Page<Orders> findOrderByTime(Timestamp startTime, Timestamp endTime, Pageable pageable);
+	
+	@Query(value = "SELECT * FROM orders WHERE wallet_id = ?1", nativeQuery = true)
+	Page<Orders> findOrderByUser(int walletId, Pageable pageable);
+	
+	
+	@Query(value = "select round(sum(total), 2) from orders", nativeQuery = true)
+	float getTotalRevenue();
+	
+	@Query(value = "select round(sum(total), 2) from orders WHERE order_datetime BETWEEN ?1 AND ?2", nativeQuery = true)
+	float getRevenueByTime(Timestamp startTime, Timestamp endTime);
 }

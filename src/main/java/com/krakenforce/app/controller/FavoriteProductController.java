@@ -88,7 +88,6 @@ public class FavoriteProductController {
 				dtos.setProductId(item.getProductId());
 				dtos.setName(item.getName());
 				dtos.setPrice(item.getPrice());
-				dtos.setTagName(tagStringSet);
 				dtosList.add(dtos);
 			}
 			

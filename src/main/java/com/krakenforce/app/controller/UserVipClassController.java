@@ -1,6 +1,6 @@
 package com.krakenforce.app.controller;
 
-import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,16 +47,29 @@ public class UserVipClassController {
 			return new ResponseEntity<MessageResponse>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
-
+	
 	@GetMapping()
-	public ResponseEntity<List<Users>> getUserByVipClass(@RequestParam("vipClassId") int vipClassId,
+	public ResponseEntity<Map<String, Object>> getAllVipClass(@RequestParam(defaultValue = "0") Integer pageNo,
+			@RequestParam(defaultValue = "10") Integer pageSize,
+			@RequestParam(defaultValue = "id") String sortBy){
+		try {
+			Map<String, Object> response = userVipClassService.getAll(pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String,Object>>(response, new HttpHeaders(), HttpStatus.OK);
+		}catch(Exception ex) {
+			return new ResponseEntity<Map<String,Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+		
+	}
+
+	@GetMapping("/{vipClassId}")
+	public ResponseEntity<Map<String, Object>> getUserByVipClass(@PathVariable("vipClassId") int vipClassId,
 			@RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize,
 			@RequestParam(defaultValue = "user_id") String sortBy) {
 		try {
-			List<Users> userList = usersService.getUserByVipClass(vipClassId, pageNo, pageSize, sortBy);
-			return new ResponseEntity<List<Users>>(userList, new HttpHeaders(), HttpStatus.OK);
+			Map<String, Object> response = usersService.getUserByVipClass(vipClassId, pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String ,Object>>(response, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<List<Users>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 
 	}

@@ -1,7 +1,8 @@
 package com.krakenforce.app.controller;
 
-import java.time.Instant;
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -66,43 +67,60 @@ public class PaymentController {
 	}
 	
 	@GetMapping()
-	public ResponseEntity<List<Payments>> getAllPayment(@RequestParam(defaultValue = "0") int pageNo,
+	public ResponseEntity<Map<String, Object>> getAllPayment(@RequestParam(defaultValue = "0") int pageNo,
 			@RequestParam(defaultValue = "0") int pageSize,
 			@RequestParam(defaultValue = "id") String sortBy){
 		try {
-			List<Payments> payments = paymentService.getAll(pageNo, pageSize, sortBy);
-			return new ResponseEntity<List<Payments>>(payments, new HttpHeaders(), HttpStatus.OK);
+			Map<String, Object> response = paymentService.getAll(pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(response, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<List<Payments>>(null, new HttpHeaders(), HttpStatus.OK);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
 	@GetMapping("/search_provider")
-	public ResponseEntity<List<Payments>> getPaymentByProvider(@RequestParam("provider") String provider,
+	public ResponseEntity<Map<String, Object>> getPaymentByProvider(@RequestParam("provider") String provider,
 			@RequestParam(defaultValue = "0") int pageNo,
 			@RequestParam(defaultValue = "0") int pageSize,
 			@RequestParam(defaultValue = "id") String sortBy){
 		try {
-			List<Payments> payments = paymentService.getByProvider(provider, pageNo, pageSize, sortBy);
-			return new ResponseEntity<List<Payments>>(payments, new HttpHeaders(), HttpStatus.OK);
+			Map<String, Object> payments = paymentService.getByProvider(provider, pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(payments, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<List<Payments>>(null, new HttpHeaders(), HttpStatus.OK);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/search_wallet")
+	public ResponseEntity<Map<String, Object>> getPaymentByProvider(@RequestParam("walletId") int walletId,
+			@RequestParam(defaultValue = "0") int pageNo,
+			@RequestParam(defaultValue = "0") int pageSize,
+			@RequestParam(defaultValue = "id") String sortBy){
+		try {
+			Map<String, Object> payments = paymentService.getByWalletId(walletId, pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(payments, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
 	@GetMapping("/search_time")
-	public ResponseEntity<List<Payments>> getPaymentByTime(@RequestParam("startTime") Instant startTime,
-			@RequestParam("endTime") Instant endTime,
+	public ResponseEntity<Map<String, Object>> getPaymentByTime(@RequestParam("startTime") String startTime,
+			@RequestParam("endTime") String endTime,
 			@RequestParam(defaultValue = "0") int pageNo,
 			@RequestParam(defaultValue = "0") int pageSize,
 			@RequestParam(defaultValue = "id") String sortBy){
 		try {
-			List<Payments> payments = paymentService.getByTime(startTime, endTime, pageNo, pageSize, sortBy);
-			return new ResponseEntity<List<Payments>>(payments, new HttpHeaders(), HttpStatus.OK);
+			Timestamp start = Timestamp.valueOf(startTime);
+			Timestamp end = Timestamp.valueOf(endTime);
+			Map<String, Object> payments = paymentService.getByTime(start, end, pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(payments, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<List<Payments>>(null, new HttpHeaders(), HttpStatus.OK);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	
 	
 	
 	
@@ -113,7 +131,7 @@ public class PaymentController {
 			transactionsService.add(transactions);
 			return new ResponseEntity<Transactions>(transactions, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<Transactions>(null, new HttpHeaders(), HttpStatus.OK);
+			return new ResponseEntity<Transactions>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -133,19 +151,19 @@ public class PaymentController {
 			Transactions transactions =  transactionsService.getById(transactionId);
 			return new ResponseEntity<Transactions>(transactions, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<Transactions>(null, new HttpHeaders(), HttpStatus.OK);
+			return new ResponseEntity<Transactions>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
 	@GetMapping("/transactions")
-	public ResponseEntity<List<Transactions>> getAllTransaction(@RequestParam(defaultValue = "0") int pageNo,
+	public ResponseEntity<Map<String, Object>> getAllTransaction(@RequestParam(defaultValue = "0") int pageNo,
 			@RequestParam(defaultValue = "0") int pageSize,
 			@RequestParam(defaultValue = "id") String sortBy){
 		try {
-			List<Transactions> transactions =  transactionsService.getAll(pageNo, pageSize, sortBy);
-			return new ResponseEntity<List<Transactions>>(transactions, new HttpHeaders(), HttpStatus.OK);
+			Map<String, Object> transactions =  transactionsService.getAll(pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(transactions, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<List<Transactions>>(null, new HttpHeaders(), HttpStatus.OK);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -155,34 +173,51 @@ public class PaymentController {
 			List<Transactions> transactions =  transactionsService.getByPaymentId(paymentId);
 			return new ResponseEntity<List<Transactions>>(transactions, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<List<Transactions>>(null, new HttpHeaders(), HttpStatus.OK);
+			return new ResponseEntity<List<Transactions>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
-	@GetMapping("/transactions/search_keyword")
-	public ResponseEntity<List<Transactions>> getTransactionByKeyword(@RequestParam("keyword") String keyword,
+	@GetMapping("/transactions/search_wallet")
+	public ResponseEntity<Map<String, Object>> getTransactionByWallet(@RequestParam("walletId") int walletId,
 			@RequestParam(defaultValue = "0") int pageNo,
 			@RequestParam(defaultValue = "0") int pageSize,
 			@RequestParam(defaultValue = "id") String sortBy){
 		try {
-			List<Transactions> transactions =  transactionsService.getByKeyword(keyword, pageNo, pageSize, sortBy);
-			return new ResponseEntity<List<Transactions>>(transactions, new HttpHeaders(), HttpStatus.OK);
+			Map<String,Object> transactions =  transactionsService.getByWallet(walletId, pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String,Object>>(transactions, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<List<Transactions>>(null, new HttpHeaders(), HttpStatus.OK);
+			return new ResponseEntity<Map<String,Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	
+	
+	@GetMapping("/transactions/search_keyword")
+	public ResponseEntity<Map<String, Object>> getTransactionByKeyword(@RequestParam("keyword") String keyword,
+			@RequestParam(defaultValue = "0") int pageNo,
+			@RequestParam(defaultValue = "0") int pageSize,
+			@RequestParam(defaultValue = "id") String sortBy){
+		try {
+			Map<String,Object> transactions =  transactionsService.getByKeyword(keyword, pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String,Object>>(transactions, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Map<String,Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
 	@GetMapping("/transactions/search_time")
-	public ResponseEntity<List<Transactions>> getTransactionByKeyword(@RequestParam("startTime") Instant startTime,
-			@RequestParam("endTime") Instant endTime,
+	public ResponseEntity<Map<String,Object>> getTransactionByKeyword(@RequestParam("startTime") String startTime,
+			@RequestParam("endTime") String endTime,
 			@RequestParam(defaultValue = "0") int pageNo,
 			@RequestParam(defaultValue = "0") int pageSize,
 			@RequestParam(defaultValue = "id") String sortBy){
 		try {
-			List<Transactions> transactions =  transactionsService.getByTime(startTime, endTime, pageNo, pageSize, sortBy);
-			return new ResponseEntity<List<Transactions>>(transactions, new HttpHeaders(), HttpStatus.OK);
+			Timestamp start = Timestamp.valueOf(startTime);
+			Timestamp end = Timestamp.valueOf(endTime);
+			Map<String,Object> transactions =  transactionsService.getByTime(start, end, pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String,Object>>(transactions, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<List<Transactions>>(null, new HttpHeaders(), HttpStatus.OK);
+			return new ResponseEntity<Map<String,Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	

@@ -17,18 +17,27 @@ public class ProductDtos {
 	private float price;
 	private float salePrice;
 	private String productDetail;
+	private String productWarranty;
 	private boolean status;
 	private String thumbnailImageUrl;
 	private String originalProductLink;
 	private ProductServicePack productServicePack;
+	private int productServicePackId;
+	private String productServicePackName;
 	private Set<Category> categories;
 	private Set<Tag> tags;
 	private Set<ProductGameCode> productGameCodes;
 	private Set<ProductImage> productImages;
 	private Set<ProductComment> productComments ;
-	private Set<CartItem> cartItems   ;
+	private Set<CartItem> cartItems ;
 	
-	private Set<String> tagName;
+	private Set<CategoryChild> categoryChilds;
+	private Set<TagChild> tagChilds;
+	
+	private Set<Integer> categoryIdSet;
+	private Set<Integer> tagIdSet;
+	
+	private int avgStar;
 
 	public ProductDtos() {
 		
@@ -186,14 +195,76 @@ public class ProductDtos {
 	public void setCartItems(Set<CartItem> cartItems) {
 		this.cartItems = cartItems;
 	}
+	
+	
+	
 
-	public Set<String> getTagName() {
-		return tagName;
+	public Set<CategoryChild> getCategoryChilds() {
+		return categoryChilds;
 	}
 
-	public void setTagName(Set<String> tagName) {
-		this.tagName = tagName;
+	public void setCategoryChilds(Set<CategoryChild> categoryChilds) {
+		this.categoryChilds = categoryChilds;
 	}
+
+	public String getProductWarranty() {
+		return productWarranty;
+	}
+
+	public void setProductWarranty(String productWarranty) {
+		this.productWarranty = productWarranty;
+	}
+
+	public int getProductServicePackId() {
+		return productServicePackId;
+	}
+
+	public void setProductServicePackId(int productServicePackId) {
+		this.productServicePackId = productServicePackId;
+	}
+
+	public String getProductServicePackName() {
+		return productServicePackName;
+	}
+
+	public void setProductServicePackName(String productServicePackName) {
+		this.productServicePackName = productServicePackName;
+	}
+
+	public Set<TagChild> getTagChilds() {
+		return tagChilds;
+	}
+
+	public void setTagChilds(Set<TagChild> tagChilds) {
+		this.tagChilds = tagChilds;
+	}
+
+	public Set<Integer> getCategoryIdSet() {
+		return categoryIdSet;
+	}
+
+	public void setCategoryIdSet(Set<Integer> categoryIdSet) {
+		this.categoryIdSet = categoryIdSet;
+	}
+
+	public Set<Integer> getTagIdSet() {
+		return tagIdSet;
+	}
+
+	public void setTagIdSet(Set<Integer> tagIdSet) {
+		this.tagIdSet = tagIdSet;
+	}
+
+	public int getAvgStar() {
+		return avgStar;
+	}
+
+	public void setAvgStar(int avgStar) {
+		this.avgStar = avgStar;
+	}
+	
+	
+	
 	
 	
 }
