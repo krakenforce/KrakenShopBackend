@@ -8,6 +8,7 @@ import com.krakenforce.app.model.Users;
 public class ProductReviewDtos {
 	private int id;
 	private Users user;
+	private String avatarImageUrl;
 	private Product product;
 	private int productId;
 	private String productName;
@@ -121,6 +122,16 @@ public class ProductReviewDtos {
 	public void setUsername(String username) {
 		this.username = username;
 	}
+
+	public String getAvatarImageUrl() {
+		return avatarImageUrl;
+	}
+
+	public void setAvatarImageUrl(String avatarImageUrl) {
+		this.avatarImageUrl = avatarImageUrl;
+	}
+	
+	
 	
 	
 }

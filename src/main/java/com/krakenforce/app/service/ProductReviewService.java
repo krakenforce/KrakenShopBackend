@@ -15,9 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.krakenforce.app.dtos.ProductDtos;
 import com.krakenforce.app.dtos.ProductReviewDtos;
-import com.krakenforce.app.model.Product;
 import com.krakenforce.app.model.ProductReview;
 import com.krakenforce.app.repository.ProductReviewRepository;
 
@@ -68,13 +66,21 @@ public class ProductReviewService {
 		}
 	}
 
-	public List<ProductReview> getByProduct(int productId, int pageNo, int pageSize, String sortBy) {
+	public Map<String, Object> getByProduct(int productId, int pageNo, int pageSize, String sortBy) {
 		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 		Page<ProductReview> pageResult = productReviewRepository.findByProduct(productId, paging);
 		if (pageResult.hasContent()) {
-			return pageResult.getContent();
+			Map<String, Object> response = new HashMap<String, Object>();
+			List<ProductReview> list = pageResult.getContent();
+			List<ProductReviewDtos> dtosList = convertListToDtosList(list);
+			
+			response.put("reviews", dtosList);
+			response.put("currentPage", pageResult.getNumber());
+			response.put("totalItems", pageResult.getTotalElements());
+			response.put("totalPages", pageResult.getTotalPages());
+			return response;
 		} else {
-			return new ArrayList<ProductReview>();
+			return new HashMap<String, Object>();
 		}
 	}
 
@@ -106,6 +112,10 @@ public class ProductReviewService {
 			return new ArrayList<ProductReview>();
 		}
 	}
+	
+	public Integer getAverageStart(int productId) {
+		return productReviewRepository.findAverageStarByProduct(productId);
+	}
 
 	public List<ProductReviewDtos> convertListToDtosList(List<ProductReview> list){
 		List<ProductReviewDtos> dtosList = new ArrayList<ProductReviewDtos>();
@@ -120,6 +130,7 @@ public class ProductReviewService {
 			dtos.setUsername(item.getUser().getUsername());
 			dtos.setProductId(item.getProduct().getProductId());
 			dtos.setProductName(item.getProduct().getName());
+			dtos.setAvatarImageUrl(item.getUser().getAvatarImageUrl());
 			
 			dtosList.add(dtos);
 		}

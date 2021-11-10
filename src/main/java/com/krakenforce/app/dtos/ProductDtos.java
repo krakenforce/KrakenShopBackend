@@ -33,6 +33,11 @@ public class ProductDtos {
 	
 	private Set<CategoryChild> categoryChilds;
 	private Set<TagChild> tagChilds;
+	
+	private Set<Integer> categoryIdSet;
+	private Set<Integer> tagIdSet;
+	
+	private int avgStar;
 
 	public ProductDtos() {
 		
@@ -233,6 +238,31 @@ public class ProductDtos {
 	public void setTagChilds(Set<TagChild> tagChilds) {
 		this.tagChilds = tagChilds;
 	}
+
+	public Set<Integer> getCategoryIdSet() {
+		return categoryIdSet;
+	}
+
+	public void setCategoryIdSet(Set<Integer> categoryIdSet) {
+		this.categoryIdSet = categoryIdSet;
+	}
+
+	public Set<Integer> getTagIdSet() {
+		return tagIdSet;
+	}
+
+	public void setTagIdSet(Set<Integer> tagIdSet) {
+		this.tagIdSet = tagIdSet;
+	}
+
+	public int getAvgStar() {
+		return avgStar;
+	}
+
+	public void setAvgStar(int avgStar) {
+		this.avgStar = avgStar;
+	}
+	
 	
 	
 	

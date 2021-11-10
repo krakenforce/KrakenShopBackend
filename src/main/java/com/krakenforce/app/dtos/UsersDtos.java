@@ -44,6 +44,8 @@ public class UsersDtos {
 	private Set<Product> favoriteProducts;
 	private Set<ShoppingCart> shoppingCarts ;
 	
+	private String resetPasswordToken;
+	
 	//favorite product
 	private String favoriterProductName;
 	private int favoriteProductId;
@@ -330,6 +332,14 @@ public class UsersDtos {
 
 	public void setFavoriteProductId(int favoriteProductId) {
 		this.favoriteProductId = favoriteProductId;
+	}
+
+	public String getResetPasswordToken() {
+		return resetPasswordToken;
+	}
+
+	public void setResetPasswordToken(String resetPasswordToken) {
+		this.resetPasswordToken = resetPasswordToken;
 	}
 	
 	

@@ -17,6 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.krakenforce.app.dtos.OrdersDtos;
 import com.krakenforce.app.model.Orders;
 import com.krakenforce.app.repository.OrderRepository;
+import com.krakenforce.app.repository.stats.CategogyStats;
+import com.krakenforce.app.repository.stats.CategoryStatisticRepository;
+import com.krakenforce.app.repository.stats.ProductStatisticRepository;
+import com.krakenforce.app.repository.stats.ProductStats;
+import com.krakenforce.app.repository.stats.TagStatisticRepository;
+import com.krakenforce.app.repository.stats.TagStats;
+import com.krakenforce.app.repository.stats.UserStatisticRepository;
+import com.krakenforce.app.repository.stats.UserStats;
 
 @Service
 @Transactional
@@ -24,6 +32,20 @@ public class OrderService {
 
 	@Autowired
 	private OrderRepository orderRepository;
+	
+	@Autowired
+	private ProductStatisticRepository productStatisticRepository;
+	
+	@Autowired
+	private CategoryStatisticRepository categoryStatisticRepository;
+	
+	@Autowired
+	private TagStatisticRepository tagStatisticRepository;
+	
+	@Autowired
+	private UserStatisticRepository userStatisticRepository;
+	
+
 	
 	public Orders add(Orders order) {
 		return orderRepository.save(order);
@@ -47,6 +69,24 @@ public class OrderService {
 	public Map<String, Object> getAll(int pageNo, int pageSize, String sortBy){
 		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 		Page<Orders> pageResult = orderRepository.findAll(paging);
+		if(pageResult.hasContent()) {
+			Map<String, Object> response = new HashMap<String, Object>();
+			List<Orders> list = pageResult.getContent();
+			List<OrdersDtos> dtoList = convertListToDtosList(list);
+			
+			response.put("orders", dtoList);
+			response.put("currentPage", pageResult.getNumber());
+			response.put("totalItems", pageResult.getTotalElements());
+			response.put("totalPages", pageResult.getTotalPages());
+			return response;
+		}else {
+			return new HashMap<String, Object>();
+		}
+	}
+	
+	public Map<String, Object> getOrderByUser(int walletId, int pageNo, int pageSize, String sortBy){
+		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+		Page<Orders> pageResult = orderRepository.findOrderByUser(walletId, paging);
 		if(pageResult.hasContent()) {
 			Map<String, Object> response = new HashMap<String, Object>();
 			List<Orders> list = pageResult.getContent();
@@ -89,6 +129,16 @@ public class OrderService {
 		}
 	}
 	
+	public float getTotalRevenue() {
+		return orderRepository.getTotalRevenue();
+	}
+	
+	public float getRevenueByTime(Timestamp startTime, Timestamp endTime) {
+		return orderRepository.getRevenueByTime(startTime, endTime);
+	}
+	
+	
+	
 	List<OrdersDtos> convertListToDtosList(List<Orders> orderList){
 		List<OrdersDtos> dtosList = new ArrayList<OrdersDtos>();
 		for(Orders item : orderList) {
@@ -105,5 +155,29 @@ public class OrderService {
 		}
 		return dtosList;
 	}
+	
+	public List<ProductStats> getCountOfProduct(){
+		List<ProductStats> pageResult = productStatisticRepository.getProductCount();
+		return pageResult;
+	}
+	
+	public List<ProductStats> getCountOfProductByUser(int userId){
+		List<ProductStats> pageResult = productStatisticRepository.getProductCountByUser(userId);
+		return pageResult;
+	}
+	
+	public List<CategogyStats> getCountOfCategory(){
+		List<CategogyStats> list = categoryStatisticRepository.getCategoryCount();
+		return list ;
+	}
+	
+	public List<TagStats> getCountOfTag(){
+		return tagStatisticRepository.getTagCount();
+	}
+	
+	public List<UserStats> getTotalByUser(){
+		return userStatisticRepository.getSumTotalUser();
+	}
+	
 	
 }

@@ -1,6 +1,6 @@
 package com.krakenforce.app.repository;
 
-import java.time.Instant;
+import java.sql.Timestamp;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +20,6 @@ PagingAndSortingRepository<UserFeedback, Integer>{
 	public Page<UserFeedback> findFeedbackByUser(int userId, Pageable pageable);
 	
 	@Query(value = "SELECT * FROM user_feedback WHERE date_time BETWEEN ?1 AND ?2 ", nativeQuery = true)
-	public Page<UserFeedback> findByTime(Instant time1,Instant time2, Pageable pageable);
+	public Page<UserFeedback> findByTime(Timestamp time1,Timestamp time2, Pageable pageable);
 
 }

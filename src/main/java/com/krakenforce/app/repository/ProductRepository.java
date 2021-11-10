@@ -32,8 +32,14 @@ PagingAndSortingRepository<Product, Integer>{
 	@Query(value = "SELECT p FROM Product p JOIN p.tags t WHERE t.tagId = ?1")
 	Page<Product> getProductByTag(int tagId, Pageable pageable);
 	
+	@Query(value = "SELECT p FROM Product p JOIN p.tags t WHERE t.name = ?1")
+	Page<Product> getProductByTagName(String tagName, Pageable pageable);
+	
 	@Query(value = "SELECT p FROM Product p JOIN p.categories c WHERE c.categoryId = ?1")
 	Page<Product> getProductByCategory(int categoryId, Pageable pageable);
+	
+	@Query(value = "SELECT p FROM Product p JOIN p.categories c WHERE c.name = ?1")
+	Page<Product> getProductByCategoryName(String categoryName, Pageable pageable);
 	
 	@Query(value = "SELECT p FROM Product p JOIN p.users u WHERE u.userId = ?1")
 	Page<Product> getFavoriteProductByUser(int userId, Pageable pageable);

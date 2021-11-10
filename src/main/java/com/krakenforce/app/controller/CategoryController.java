@@ -23,7 +23,7 @@ import com.krakenforce.app.model.Category;
 import com.krakenforce.app.security.common.MessageResponse;
 import com.krakenforce.app.service.CategoryService;
 
-@CrossOrigin("http://localhost:4000/")
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/category")
 public class CategoryController {

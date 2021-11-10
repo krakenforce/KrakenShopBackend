@@ -91,6 +91,19 @@ public class PaymentController {
 		}
 	}
 	
+	@GetMapping("/search_wallet")
+	public ResponseEntity<Map<String, Object>> getPaymentByProvider(@RequestParam("walletId") int walletId,
+			@RequestParam(defaultValue = "0") int pageNo,
+			@RequestParam(defaultValue = "0") int pageSize,
+			@RequestParam(defaultValue = "id") String sortBy){
+		try {
+			Map<String, Object> payments = paymentService.getByWalletId(walletId, pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(payments, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@GetMapping("/search_time")
 	public ResponseEntity<Map<String, Object>> getPaymentByTime(@RequestParam("startTime") String startTime,
 			@RequestParam("endTime") String endTime,
@@ -106,6 +119,8 @@ public class PaymentController {
 			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	
 	
 	
 	
@@ -161,6 +176,21 @@ public class PaymentController {
 			return new ResponseEntity<List<Transactions>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	@GetMapping("/transactions/search_wallet")
+	public ResponseEntity<Map<String, Object>> getTransactionByWallet(@RequestParam("walletId") int walletId,
+			@RequestParam(defaultValue = "0") int pageNo,
+			@RequestParam(defaultValue = "0") int pageSize,
+			@RequestParam(defaultValue = "id") String sortBy){
+		try {
+			Map<String,Object> transactions =  transactionsService.getByWallet(walletId, pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String,Object>>(transactions, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Map<String,Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	
 	
 	@GetMapping("/transactions/search_keyword")
 	public ResponseEntity<Map<String, Object>> getTransactionByKeyword(@RequestParam("keyword") String keyword,

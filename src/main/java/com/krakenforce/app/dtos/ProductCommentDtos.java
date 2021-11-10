@@ -9,7 +9,12 @@ import com.krakenforce.app.model.Users;
 public class ProductCommentDtos {
 	private int id;
 	private Users user;
+	private int userId;
+	private String username;
+	private String avatarImageUrl;
 	private Product product;
+	private int productId;
+	private String productName;
 	private Timestamp commentTime;
 	private String content;
 	private boolean status;
@@ -86,6 +91,49 @@ public class ProductCommentDtos {
 	public void setParentComment(ProductComment parentComment) {
 		this.parentComment = parentComment;
 	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getAvatarImageUrl() {
+		return avatarImageUrl;
+	}
+
+	public void setAvatarImageUrl(String avatarImageUrl) {
+		this.avatarImageUrl = avatarImageUrl;
+	}
+
+	public int getProductId() {
+		return productId;
+	}
+
+	public void setProductId(int productId) {
+		this.productId = productId;
+	}
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+	
+	
+	
 	
 	
 }

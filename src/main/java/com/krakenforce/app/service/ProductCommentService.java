@@ -1,8 +1,10 @@
 package com.krakenforce.app.service;
-
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.krakenforce.app.dtos.ProductCommentDtos;
 import com.krakenforce.app.model.ProductComment;
 import com.krakenforce.app.repository.ProductCommentRepository;
 
@@ -42,13 +45,21 @@ public class ProductCommentService {
 	 * @param sortBy
 	 * @return List<ProductComment>
 	 */
-	public List<ProductComment> getAllComment (Integer pageNo, Integer pageSize, String sortBy){
+	public Map<String, Object> getAllComment (Integer pageNo, Integer pageSize, String sortBy){
 		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 		Page<ProductComment> pageResult = productCommentRepository.findAll(paging);
 		if(pageResult.hasContent()) {
-			return pageResult.getContent();
+			Map<String, Object> response = new HashMap<String, Object>();
+			List<ProductComment> list = pageResult.getContent();
+			List<ProductCommentDtos> dtosList = convertListToDtosList(list);
+			
+			response.put("comments", dtosList);
+			response.put("currentPage", pageResult.getNumber());
+			response.put("totalItems", pageResult.getTotalElements());
+			response.put("totalPages", pageResult.getTotalPages());
+			return response;
 		}else {
-			return new ArrayList<ProductComment>();
+			return new HashMap<String, Object>();
 		}
 	}
 	
@@ -60,13 +71,21 @@ public class ProductCommentService {
 	 * @param sortBy
 	 * @return List<ProductComment>
 	 */
-	public List<ProductComment> getCommentByProduct(int productId, Integer pageNo, Integer pageSize, String sortBy){
+	public Map<String, Object> getCommentByProduct(int productId, Integer pageNo, Integer pageSize, String sortBy){
 		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 		Page<ProductComment> pageResult = productCommentRepository.findCommentByProduct(productId, paging);
 		if(pageResult.hasContent()) {
-			return pageResult.getContent();
+			Map<String, Object> response = new HashMap<String, Object>();
+			List<ProductComment> list = pageResult.getContent();
+			List<ProductCommentDtos> dtosList = convertListToDtosList(list);
+			
+			response.put("comments", dtosList);
+			response.put("currentPage", pageResult.getNumber());
+			response.put("totalItems", pageResult.getTotalElements());
+			response.put("totalPages", pageResult.getTotalPages());
+			return response;
 		}else {
-			return new ArrayList<ProductComment>();
+			return new HashMap<String, Object>();
 		}
 	}
 	
@@ -97,13 +116,21 @@ public class ProductCommentService {
 	 * @param sortBy
 	 * @return List<Comment>
 	 */
-	public List<ProductComment> getCommentByTime(Instant startTime, Instant endTime, Integer pageNo, Integer pageSize, String sortBy){
+	public Map<String, Object> getCommentByTime(Timestamp startTime,Timestamp endTime, Integer pageNo, Integer pageSize, String sortBy){
 		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 		Page<ProductComment> pageResult = productCommentRepository.findCommentByTime(startTime, endTime, paging);
 		if(pageResult.hasContent()) {
-			return pageResult.getContent();
+			Map<String, Object> response = new HashMap<String, Object>();
+			List<ProductComment> list = pageResult.getContent();
+			List<ProductCommentDtos> dtosList = convertListToDtosList(list);
+			
+			response.put("comments", dtosList);
+			response.put("currentPage", pageResult.getNumber());
+			response.put("totalItems", pageResult.getTotalElements());
+			response.put("totalPages", pageResult.getTotalPages());
+			return response;
 		}else {
-			return new ArrayList<ProductComment>();
+			return new HashMap<String, Object>();
 		}
 	}
 	
@@ -125,6 +152,25 @@ public class ProductCommentService {
 		}else {
 			return new ArrayList<ProductComment>();
 		}
+	}
+	
+	public List<ProductCommentDtos> convertListToDtosList(List<ProductComment> list){
+		List<ProductCommentDtos> dtosList = new ArrayList<ProductCommentDtos>();
+		for(ProductComment item : list) {
+			ProductCommentDtos dtos = new ProductCommentDtos();
+			dtos.setId(item.getId());
+			dtos.setAvatarImageUrl(item.getUser().getAvatarImageUrl());
+			dtos.setUserId(item.getUser().getUserId());
+			dtos.setUsername(item.getUser().getUsername());
+			dtos.setCommentTime(item.getCommentTime());
+			dtos.setContent(item.getContent());
+			dtos.setProductId(item.getProduct().getProductId());
+			dtos.setProductName(item.getProduct().getName());
+			dtos.setStatus(item.isStatus());
+			
+			dtosList.add(dtos);
+		}
+		return dtosList;
 	}
 	
 	

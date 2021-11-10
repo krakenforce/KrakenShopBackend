@@ -59,7 +59,7 @@ public class Product {
 	private ProductServicePack productServicePack;
 	
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JoinTable(name = "category_product",
 				joinColumns = @JoinColumn(name = "product_id"),
 				inverseJoinColumns = @JoinColumn(name = "category_id"))
@@ -68,7 +68,7 @@ public class Product {
 	@ManyToMany(mappedBy = "favoriteProducts")
 	private Set<Users> users;
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JoinTable(name = "tag_product",
 				joinColumns = @JoinColumn(name = "product_id"),
 				inverseJoinColumns = @JoinColumn(name = "tag_id"))

@@ -11,6 +11,7 @@ public class ShoppingCartDtos {
 	private Users user;
 	private float total;
 	private Timestamp createdAt;
+	private int quantity;
 	private boolean status;
 	private Set<CartItem> cartItems;
 
@@ -76,6 +77,15 @@ public class ShoppingCartDtos {
 	public void setCartItems(Set<CartItem> cartItems) {
 		this.cartItems = cartItems;
 	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+	
 	
 	
 }

@@ -3,6 +3,7 @@ package com.krakenforce.app.controller;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -83,18 +84,8 @@ public class ProductController {
 			,@RequestPart(value = "thumbnailImage", required = false) MultipartFile thumbnailImage,
 			@RequestPart(value = "imageList", required = false) List<MultipartFile> imageList){
 		try {
-			Set<Integer> categoryIdSet = productResponse.getCategoryIdSet();
-			Set<Category> categories = new HashSet<Category>();
-			for(Integer categoryId : categoryIdSet) {
-				Category category = categoryService.getById(categoryId);
-				categories.add(category);
-			}
-			Set<Integer> tagIdSet = productResponse.getTagIdSet();
-			Set<Tag> tags = new HashSet<Tag>();
-			for(Integer tagId : tagIdSet) {
-				Tag tag = tagService.getById(tagId);
-				tags.add(tag);
-			}
+			Set<Category> categories = productResponse.getCategories();
+			Set<Tag> tags = productResponse.getTags();
 			Product product = productResponse.getProduct();
 			
 			if(thumbnailImage != null) {
@@ -117,6 +108,7 @@ public class ProductController {
 			return new ResponseEntity<Product>(product, new HttpHeaders(), HttpStatus.OK);
 			
 		}catch(Exception ex) {
+			ex.printStackTrace();
 			return new ResponseEntity<Product>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}	
@@ -208,7 +200,7 @@ public class ProductController {
 	}
 	
 	@GetMapping("/search/service_pack")
-	public ResponseEntity<Map<String, Object>> getProductByName(@RequestParam("servicePackId") int servicePackId,
+	public ResponseEntity<Map<String, Object>> getProductByServicePack(@RequestParam("servicePackId") int servicePackId,
 			@RequestParam(defaultValue ="0") int pageNo,
 			@RequestParam(defaultValue ="10") int pageSize,
 			@RequestParam(defaultValue ="product_id") String sortBy){
@@ -266,6 +258,20 @@ public class ProductController {
 		}
 	}
 	
+	@GetMapping("/tag/search")
+	public ResponseEntity<Map<String, Object>> getProductByTagName(@RequestParam("tagName") String tagName, 
+			@RequestParam(defaultValue ="0") int pageNo,
+			@RequestParam(defaultValue ="10") int pageSize,
+			@RequestParam(defaultValue ="productId") String sortBy){
+		try {
+			Map<String ,Object> response = productService.seachProductByTagName(tagName,pageNo, pageSize, sortBy);
+			
+			return new ResponseEntity<Map<String, Object>>(response, new HttpHeaders(), HttpStatus.OK);
+		}catch(Exception ex) {
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@GetMapping("/category/{categoryId}")
 	public ResponseEntity<Map<String, Object>> getProductByCategory(@PathVariable("categoryId") String categoryId, 
 			@RequestParam(defaultValue ="0") int pageNo,
@@ -274,6 +280,19 @@ public class ProductController {
 		try {
 			int id = Integer.parseInt(categoryId);
 			Map<String, Object> response = productService.seachProductByCategory(id,pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(response, new HttpHeaders(), HttpStatus.OK);
+		}catch(Exception ex) {
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/category/search")
+	public ResponseEntity<Map<String, Object>> getProductByCategoryName(@RequestParam("categoryName") String categoryName, 
+			@RequestParam(defaultValue ="0") int pageNo,
+			@RequestParam(defaultValue ="10") int pageSize,
+			@RequestParam(defaultValue ="productId") String sortBy){
+		try {
+			Map<String, Object> response = productService.seachProductByCategoryName(categoryName,pageNo, pageSize, sortBy);
 			return new ResponseEntity<Map<String, Object>>(response, new HttpHeaders(), HttpStatus.OK);
 		}catch(Exception ex) {
 			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
@@ -299,8 +318,12 @@ public class ProductController {
 				ProductComment parent = productCommentService.getById(parentCommentId);
 				comment.setParentComment(parent);
 			}
+			Date date =  new Date();
+			Timestamp timestamp = new Timestamp(date.getTime());
+			comment.setCommentTime(timestamp);
 			comment.setUser(user);
-			comment.setProduct(product);	
+			comment.setProduct(product);
+			comment.setStatus(true);
 			productCommentService.add(productComment);
 			return new ResponseEntity<ProductComment>(comment, new HttpHeaders(), HttpStatus.OK);
 			
@@ -332,28 +355,28 @@ public class ProductController {
 	
 	
 	@GetMapping("/comment")
-	public ResponseEntity<List<ProductComment>> getAllComment(@RequestParam(defaultValue ="0") int pageNo,
+	public ResponseEntity<Map<String, Object>> getAllComment(@RequestParam(defaultValue ="0") int pageNo,
 			@RequestParam(defaultValue ="10") int pageSize,
 			@RequestParam(defaultValue ="id") String sortBy){
 		try {
-			List<ProductComment> list = productCommentService.getAllComment(pageNo, pageSize, sortBy);
-			return new ResponseEntity<List<ProductComment>>(list, new HttpHeaders(), HttpStatus.OK);
+			Map<String, Object> list = productCommentService.getAllComment(pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(list, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<List<ProductComment>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 		
 	}
 	
 	@GetMapping("/comment/product/{productId}")
-	public ResponseEntity<List<ProductComment>> getCommentByProduct(@PathVariable("productId") int productId,
+	public ResponseEntity<Map<String, Object>> getCommentByProduct(@PathVariable("productId") int productId,
 			@RequestParam(defaultValue ="0") int pageNo,
 			@RequestParam(defaultValue ="10") int pageSize,
 			@RequestParam(defaultValue ="id") String sortBy){
 		try {
-			List<ProductComment> list = productCommentService.getCommentByProduct(productId, pageNo, pageSize, sortBy);
-			return new ResponseEntity<List<ProductComment>>(list, new HttpHeaders(), HttpStatus.OK);
+			Map<String, Object> list = productCommentService.getCommentByProduct(productId, pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(list, new HttpHeaders(), HttpStatus.OK);
 		}catch(Exception ex) {
-			return new ResponseEntity<List<ProductComment>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -371,16 +394,18 @@ public class ProductController {
 	}
 	
 	@GetMapping("/comment/time")
-	public ResponseEntity<List<ProductComment>> getCommentByTime(@RequestParam("startTime") Instant startTime,
-			@RequestParam("endTime") Instant endTime,
+	public ResponseEntity<Map<String, Object>> getCommentByTime(@RequestParam("startTime") String startTime,
+			@RequestParam("endTime") String endTime,
 			@RequestParam(defaultValue ="0") int pageNo,
 			@RequestParam(defaultValue ="10") int pageSize,
 			@RequestParam(defaultValue ="id") String sortBy){
 		try {
-			List<ProductComment> list = productCommentService.getCommentByTime(startTime, endTime, pageNo, pageSize, sortBy);
-			return new ResponseEntity<List<ProductComment>>(list, new HttpHeaders(), HttpStatus.OK);
+			Timestamp start = Timestamp.valueOf(startTime);
+			Timestamp end = Timestamp.valueOf(endTime);
+			Map<String, Object> list = productCommentService.getCommentByTime(start, end, pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(list, new HttpHeaders(), HttpStatus.OK);
 		}catch(Exception ex) {
-			return new ResponseEntity<List<ProductComment>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -406,9 +431,13 @@ public class ProductController {
 			@RequestParam("productId") int productId,
 			@RequestBody ProductReview productReview){
 		try {
+			Date date = new Date();
+			Timestamp timestamp2 = new Timestamp(date.getTime());
 			Users user = usersService.getById(userId);
 			Product product = productService.getById(productId);
 			productReview.setProduct(product);
+			productReview.setPurchaseStatus(true);
+			productReview.setCreatedAt(timestamp2);
 			productReview.setUser(user);
 			
 			productReviewService.add(productReview);
@@ -466,15 +495,15 @@ public class ProductController {
 	}
 	
 	@GetMapping("/review/product/{productId}")
-	public ResponseEntity<List<ProductReview>> getReviewByProduct(@PathVariable("productId") int productId,
+	public ResponseEntity<Map<String, Object>> getReviewByProduct(@PathVariable("productId") int productId,
 			@RequestParam(defaultValue ="0") int pageNo,
 			@RequestParam(defaultValue ="10") int pageSize,
 			@RequestParam(defaultValue ="id") String sortBy){
 		try {
-			List<ProductReview> list = productReviewService.getByProduct(productId, pageNo, pageSize, sortBy);
-			return new ResponseEntity<List<ProductReview>>(list, new HttpHeaders(), HttpStatus.OK);
+			Map<String, Object> list = productReviewService.getByProduct(productId, pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(list, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<List<ProductReview>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 		
 	}
@@ -510,6 +539,16 @@ public class ProductController {
 			return new ResponseEntity<List<ProductReview>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 		
+	}
+	
+	@GetMapping("/review/star")
+	public ResponseEntity<Integer> getAverageStar(@RequestParam("productId") int productId) {
+		try {
+			int star = productReviewService.getAverageStart(productId);
+			return new ResponseEntity<Integer>(star, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Integer>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	

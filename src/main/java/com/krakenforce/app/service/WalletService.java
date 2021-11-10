@@ -21,4 +21,12 @@ public class WalletService {
 	public Wallet getById(int walletId) {
 		return walletRepository.findById(walletId).orElse(null);
 	}
+	
+	public Wallet updateWallet(int walletId, float total) {
+		Wallet wallet = walletRepository.findById(walletId).orElse(null);
+		float newBalance = wallet.getBalance() - total;
+		wallet.setBalance(newBalance);
+		walletRepository.save(wallet);
+		return wallet;
+	}
 }

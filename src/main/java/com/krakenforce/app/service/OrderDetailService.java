@@ -54,6 +54,11 @@ public class OrderDetailService {
 		}
 	}
 	
+	public List<?> getOrderDetailByWalletId(int walletId){
+		return orderDetailRepository.findOrderDetailByWalletId(walletId);
+	}
+	
+	
 	public List<OrderDetailDtos> convertListToDtosList(List<OrderDetail> list){
 		List<OrderDetailDtos> dtosList = new ArrayList<OrderDetailDtos>();
 		for(OrderDetail item : list) {

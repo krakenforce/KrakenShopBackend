@@ -88,6 +88,24 @@ public class TransactionsService {
 		}
 	}
 	
+	public Map<String, Object> getByWallet(int walletId, int pageNo, int pageSize, String sortBy){
+		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+		Page<Transactions> pageResult = transactionsRepository.findByWallet(walletId, paging);
+		if(pageResult.hasContent()) {
+			Map<String, Object> response = new HashMap<String, Object>();
+			List<Transactions> list = pageResult.getContent();
+			List<TransactionsDtos> dtoList = convertListToDtosList(list);
+			
+			response.put("transactions", dtoList);
+			response.put("currentPage", pageResult.getNumber());
+			response.put("totalItems", pageResult.getTotalElements());
+			response.put("totalPages", pageResult.getTotalPages());
+			return response;
+		}else {
+			return new HashMap<String, Object>();
+		}
+	}
+	
 	/**
 	 * use to get transaction by time
 	 * @param startTime

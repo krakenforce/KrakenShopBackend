@@ -73,6 +73,24 @@ public class PaymentService {
 		}
 	}
 	
+	public Map<String, Object> getByWalletId(int walletId, int pageNo, int pageSize, String sortBy){
+		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+		Page<Payments> pageResult = paymentRepository.findByWalletId(walletId, paging);
+		if(pageResult.hasContent()) {
+			Map<String, Object> response = new HashMap<String, Object>();
+			List<Payments> list = pageResult.getContent();
+			List<PaymentDtos> dtoList = convertListToDtosList(list);
+			
+			response.put("payments", dtoList);
+			response.put("currentPage", pageResult.getNumber());
+			response.put("totalItems", pageResult.getTotalElements());
+			response.put("totalPages", pageResult.getTotalPages());
+			return response;
+		}else {
+			return new HashMap<String, Object>();
+		}
+	}
+	
 	public Map<String, Object> getByTime(Timestamp startTime, Timestamp endTime, int pageNo, int pageSize, String sortBy){
 		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 		Page<Payments> pageResult = paymentRepository.findByTime(startTime, endTime, paging);

@@ -25,4 +25,10 @@ PagingAndSortingRepository<Transactions, Integer>{
 	
 	@Query( value = "SELECT * FROM transactions WHERE created_at BETWEEN ?1 AND ?2 ", nativeQuery = true)
 	Page<Transactions> findByTime(Timestamp startTime, Timestamp endTime, Pageable pageable );
+	
+	@Query(value = "select t.* from transactions as t \r\n"
+			+ "inner join payment as p on p.id = t.payment_id\r\n"
+			+ "inner join wallet as w on p.wallet_id = w.id\r\n"
+			+ "where w.id = ?1", nativeQuery = true)
+	Page<Transactions> findByWallet(int walletId, Pageable pageable);
 }

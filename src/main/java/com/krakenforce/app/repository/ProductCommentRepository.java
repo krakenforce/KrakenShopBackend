@@ -1,5 +1,6 @@
 package com.krakenforce.app.repository;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 
 import org.springframework.data.domain.Page;
@@ -22,8 +23,8 @@ PagingAndSortingRepository<ProductComment, Integer>{
 	@Query(value = "SELECT * FROM product_comment WHERE user_id = ?1", nativeQuery = true)
 	Page<ProductComment> findCommentByUser(int userId, Pageable pageable);
 	
-	@Query(value = "SELECT * FROM product_comment WHERE comment_time BETWEEN ?1 AND endTime = ?2", nativeQuery = true)
-	Page<ProductComment> findCommentByTime(Instant startTime, Instant endTime, Pageable pageable);
+	@Query(value = "SELECT * FROM product_comment WHERE comment_time BETWEEN ?1 AND ?2", nativeQuery = true)
+	Page<ProductComment> findCommentByTime(Timestamp startTime, Timestamp endTime, Pageable pageable);
 	
 	@Query(value = "SELECT * FROM product_comment WHERE user_id = ?1 AND comment_time BETWEEN ?2 AND endTime = ?3", nativeQuery = true)
 	Page<ProductComment> findCommentByTimeAndUser(int userId, Instant startTime, Instant endTime, Pageable pageable);

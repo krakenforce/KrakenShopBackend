@@ -1,12 +1,20 @@
 package com.krakenforce.app.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -74,6 +82,9 @@ public class AuthController {
 	
 	@Autowired
 	ShoppingCartService shoppingCartService;
+	
+	@Autowired
+	private JavaMailSender mailSender;
 	
 
 	@Autowired
@@ -192,17 +203,21 @@ public class AuthController {
 	 * @return
 	 */
 	@PostMapping("/forgot_password")
-	public ResponseEntity<?>  processForgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+	public ResponseEntity<MessageResponse>  processForgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest) {
 		String email = forgotPasswordRequest.getEmail();
-		String token = RandomString.make(30);
-		
+		String token = RandomString.make(30);	
 		try {
 			usersService.updateResetPasswordToken(token, email);
-			return ResponseEntity.ok(token);
+			String resetPasswordLink = "http://localhost:4000" + "/reset_password?token=" + token;		
+			sendEmail(email, resetPasswordLink);
+			return new ResponseEntity<MessageResponse>(new MessageResponse("Sent email, check your email"), new HttpHeaders(), HttpStatus.OK);
 		}catch(UsersNotFoundException e) {
-			throw new UsersNotFoundException("Not found user with email " +  email);
+			return new ResponseEntity<MessageResponse>(new MessageResponse("Sent email fail, user not found"), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}catch (UnsupportedEncodingException | MessagingException e) {
+			return new ResponseEntity<MessageResponse>(new MessageResponse("Error while sending email"), new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
+	
 	
 	
 	/**
@@ -219,6 +234,34 @@ public class AuthController {
 			return ResponseEntity.ok(null);
 		}
 	}
+	
+
+	
+	public void sendEmail(String recipientEmail, String link)
+			throws MessagingException, UnsupportedEncodingException{
+				
+				MimeMessage message = mailSender.createMimeMessage();              
+			    MimeMessageHelper helper = new MimeMessageHelper(message);
+			    
+			    helper.setFrom("krakenshp@shopme.com", "Shop Support");
+			    helper.setTo(recipientEmail);
+			     
+			    String subject = "Here's the link to reset your password";
+			     
+			    String content = "<p>Hello,</p>"
+			            + "<p>You have requested to reset your password.</p>"
+			            + "<p>Click the link below to change your password:</p>"
+			            + "<p><a href=\"" + link + "\">Change my password</a></p>"
+			            + "<br>"
+			            + "<p>Ignore this email if you do remember your password, "
+			            + "or you have not made the request.</p>";
+			     
+			    helper.setSubject(subject);
+			     
+			    helper.setText(content, true);
+			     
+			    mailSender.send(message);
+			}
 	
 
 }

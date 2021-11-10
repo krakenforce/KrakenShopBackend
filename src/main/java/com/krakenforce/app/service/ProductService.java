@@ -29,6 +29,9 @@ import com.krakenforce.app.repository.ProductRepository;
 public class ProductService {
 
 	@Autowired
+	private ProductReviewService productReviewService;
+	
+	@Autowired
 	private ProductRepository productRepository;
 	
 	public Product save(Product product) {
@@ -202,6 +205,24 @@ public class ProductService {
 		}
 	}
 	
+	public Map<String, Object> seachProductByTagName(String tagName, Integer pageNo, Integer pageSize, String sortBy){
+		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+		Page<Product> pageResult = productRepository.getProductByTagName(tagName, paging);
+		if(pageResult.hasContent()) {
+			Map<String, Object> response = new HashMap<String, Object>();
+			List<Product> productList = pageResult.getContent();
+			List<ProductDtos> dtosList = convertListToDtosList(productList);
+			
+			response.put("products", dtosList);
+			response.put("currentPage", pageResult.getNumber());
+			response.put("totalItems", pageResult.getTotalElements());
+			response.put("totalPages", pageResult.getTotalPages());
+			return response;
+		}else {
+			return new HashMap<String, Object>();
+		}
+	}
+	
 	/**
 	 * use to get product by category id
 	 * @param categoryId
@@ -213,6 +234,24 @@ public class ProductService {
 	public Map<String, Object> seachProductByCategory(int categoryId, Integer pageNo, Integer pageSize, String sortBy){
 		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 		Page<Product> pageResult = productRepository.getProductByCategory(categoryId, paging);
+		if(pageResult.hasContent()) {
+			Map<String, Object> response = new HashMap<String, Object>();
+			List<Product> productList = pageResult.getContent();
+			List<ProductDtos> dtosList = convertListToDtosList(productList);
+			
+			response.put("products", dtosList);
+			response.put("currentPage", pageResult.getNumber());
+			response.put("totalItems", pageResult.getTotalElements());
+			response.put("totalPages", pageResult.getTotalPages());
+			return response;
+		}else {
+			return new HashMap<String, Object>();
+		}
+	}
+	
+	public Map<String, Object> seachProductByCategoryName(String categoryName, Integer pageNo, Integer pageSize, String sortBy){
+		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+		Page<Product> pageResult = productRepository.getProductByCategoryName(categoryName, paging);
 		if(pageResult.hasContent()) {
 			Map<String, Object> response = new HashMap<String, Object>();
 			List<Product> productList = pageResult.getContent();
@@ -264,6 +303,7 @@ public class ProductService {
 			productDtos.setProductWarranty(item.getProductWarranty());
 			productDtos.setStatus(item.isStatus());
 			productDtos.setThumbnailImageUrl(item.getThumbnailImageUrl());
+			productDtos.setAvgStar(productReviewService.getAverageStart(item.getProductId()));
 			//productDtos.setProductImages(item.getProductImages());
 			
 			dtosList.add(productDtos);
@@ -288,6 +328,7 @@ public class ProductService {
 		productDtos.setProductWarranty(item.getProductWarranty());
 		productDtos.setStatus(item.isStatus());
 		productDtos.setThumbnailImageUrl(item.getThumbnailImageUrl());
+		productDtos.setAvgStar(productReviewService.getAverageStart(item.getProductId()));
 		return productDtos;
 	}
 	
@@ -312,6 +353,7 @@ public class ProductService {
 		}
 		return list;
 	}
+	
 	
 	
 	

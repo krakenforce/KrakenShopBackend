@@ -1,5 +1,6 @@
 package com.krakenforce.app.controller;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.krakenforce.app.dtos.UserFeedbackDtos;
 import com.krakenforce.app.dtos.UserLogDtos;
+import com.krakenforce.app.dtos.UsersDtos;
 import com.krakenforce.app.enums.ERole;
 import com.krakenforce.app.model.FeedbackType;
 import com.krakenforce.app.model.ProductComment;
@@ -42,7 +44,7 @@ import com.krakenforce.app.service.UserFeedbackService;
 import com.krakenforce.app.service.UserLogService;
 import com.krakenforce.app.service.UsersService;
 
-@CrossOrigin(origins = "http://localhost:4000/", maxAge = 3600)
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/user/")
 public class UserController {
@@ -106,12 +108,41 @@ public class UserController {
 
 	@GetMapping("/{userId}")
 	//@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-	public ResponseEntity<Users> getUserById(@PathVariable("userId") int userId) {
+	public ResponseEntity<UsersDtos> getUserById(@PathVariable("userId") int userId) {
 		Users user = usersRepository.findById(userId).orElse(null);
 		if (user != null) {
-			return ResponseEntity.ok(user);
+			UsersDtos dtos = new UsersDtos();
+			dtos.setUserId(userId);
+			dtos.setUsername(user.getUsername());
+			dtos.setEmail(user.getEmail());
+			dtos.setFirstName(user.getFirstName());
+			dtos.setLastName(user.getLastName());
+			dtos.setPhone(user.getPhone());
+			dtos.setIdentityNumber(user.getIdentityNumber());
+			dtos.setGender(user.getGender());
+			dtos.setAvatarImageUrl(user.getAvatarImageUrl());
+			dtos.setAddress(user.getAddress());
+			dtos.setJob(user.getJob());
+			dtos.setMarriageStatus(user.isMarriageStatus());
+			dtos.setRegisteredAt(user.getRegisteredAt());
+			dtos.setLastLogin(user.getLastLogin());
+			dtos.setStatus(user.isStatus());
+			dtos.setResetPasswordToken(user.getResetPasswordToken());
+			return ResponseEntity.ok(dtos);
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+		}
+	}
+	
+	@PutMapping("/update_password")
+	public ResponseEntity<MessageResponse> updateUserPassword(@RequestParam("userId") int userId,
+			@RequestParam("password") String password){
+		try {
+			Users user = usersService.getById(userId);
+			usersService.updatePassword(user, password);
+			return new ResponseEntity<MessageResponse>(new MessageResponse("Change password success"), new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<MessageResponse>(new MessageResponse("Change password fail"), new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -283,20 +314,14 @@ public class UserController {
 	}
 
 	@GetMapping("/feedback")
-	public ResponseEntity<List<UserFeedbackDtos>> getAllUserFeedback(@RequestParam(defaultValue = "0") Integer pageNo,
-			@RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "id") String sortBy) {
-		List<UserFeedbackDtos> dtoList = new ArrayList<UserFeedbackDtos>();
+	public ResponseEntity<Map<String, Object>> getAllUserFeedback(@RequestParam(defaultValue = "0") Integer pageNo,
+			@RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "id") String sortBy) 
+	{
 		try {
-			List<UserFeedback> list = userFeedbackService.getAllUserFeedback(pageNo, pageSize, sortBy);
-			for (UserFeedback item : list) {
-				UserFeedbackDtos dtos = new UserFeedbackDtos(item.getId(), item.getUser().getUserId(),
-						item.getDateTime(), item.getFeedbackType().getId(), item.getFeedbackType().getName(),
-						item.getDetail());
-				dtoList.add(dtos);
-			}
-			return new ResponseEntity<List<UserFeedbackDtos>>(dtoList, new HttpHeaders(), HttpStatus.OK);
+			Map<String, Object> response = userFeedbackService.getAllUserFeedback(pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(response, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<List<UserFeedbackDtos>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -320,21 +345,16 @@ public class UserController {
 	}
 
 	@GetMapping("/feedback/search/time")
-	public ResponseEntity<List<UserFeedbackDtos>> getUserFeedbackByTime(@RequestParam("time1") Instant time1,
-			@RequestParam("time2") Instant time2, @RequestParam(defaultValue = "0") Integer pageNo,
+	public ResponseEntity<Map<String, Object>> getUserFeedbackByTime(@RequestParam("startTime") String time1,
+			@RequestParam("endTime") String time2, @RequestParam(defaultValue = "0") Integer pageNo,
 			@RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "id") String sortBy) {
-		List<UserFeedbackDtos> dtoList = new ArrayList<UserFeedbackDtos>();
 		try {
-			List<UserFeedback> list = userFeedbackService.getFeedbackByTime(time1, time2, pageNo, pageSize, sortBy);
-			for (UserFeedback item : list) {
-				UserFeedbackDtos dtos = new UserFeedbackDtos(item.getId(), item.getUser().getUserId(),
-						item.getDateTime(), item.getFeedbackType().getId(), item.getFeedbackType().getName(),
-						item.getDetail());
-				dtoList.add(dtos);
-			}
-			return new ResponseEntity<List<UserFeedbackDtos>>(dtoList, new HttpHeaders(), HttpStatus.OK);
+			Timestamp start = Timestamp.valueOf(time1);
+			Timestamp end = Timestamp.valueOf(time2);
+			Map<String, Object> list = userFeedbackService.getFeedbackByTime(start, end, pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(list, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<List<UserFeedbackDtos>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 

@@ -1,6 +1,9 @@
 package com.krakenforce.app.controller;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -34,15 +37,19 @@ public class ProductGameCodeController {
 	ProductService productService;
 	
 	@PostMapping()
-	public ResponseEntity<ProductGameCode> add(@RequestParam("productId") int productId,
+	public ResponseEntity<MessageResponse> add(@RequestParam("productId") int productId,
 			@RequestBody ProductGameCode gameCode){
 		try {
 			Product product = productService.getById(productId);
-			gameCode.setProduct(product);		
+			gameCode.setProduct(product);
+			Date date = new Date();
+			Timestamp timestamp2 = new Timestamp(date.getTime());
+			gameCode.setCreatedAt(timestamp2);
 			productGameCodeService.add(gameCode);
-			return new ResponseEntity<ProductGameCode>(gameCode, new HttpHeaders(), HttpStatus.OK);
+			return new ResponseEntity<MessageResponse>(new MessageResponse("add success"), new HttpHeaders(), HttpStatus.OK);
 		}catch(Exception ex) {
-			return new ResponseEntity<ProductGameCode>(null, new HttpHeaders(), HttpStatus.OK);
+			ex.printStackTrace();
+			return new ResponseEntity<MessageResponse>(new MessageResponse("add fail"), new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -52,7 +59,7 @@ public class ProductGameCodeController {
 			productGameCodeService.delete(gameCodeId);
 			return new ResponseEntity<MessageResponse>(new MessageResponse("delete success"), new HttpHeaders(), HttpStatus.OK);
 		}catch(Exception ex) {
-			return new ResponseEntity<MessageResponse>(new MessageResponse("delete fail"), new HttpHeaders(), HttpStatus.OK);
+			return new ResponseEntity<MessageResponse>(new MessageResponse("delete fail"), new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -67,15 +74,29 @@ public class ProductGameCodeController {
 	}
 	
 	@GetMapping("/search/")
-	public ResponseEntity<List<ProductGameCode>> getByProduct(@RequestParam("productId") int productId,
+	public ResponseEntity<Map<String, Object>> getByProduct(@RequestParam("productId") int productId,
 			@RequestParam(defaultValue ="0") int pageNo,
 			@RequestParam(defaultValue ="10") int pageSize,
 			@RequestParam(defaultValue ="id") String sortBy){
 		try {
-			List<ProductGameCode> list = productGameCodeService.getGameCodeByProduct(productId, pageNo, pageSize, sortBy);
-			return new ResponseEntity<List<ProductGameCode>>(list, new HttpHeaders(),HttpStatus.OK);
+			Map<String, Object> list = productGameCodeService.getGameCodeByProduct(productId, pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(list, new HttpHeaders(),HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<List<ProductGameCode>>(null, new HttpHeaders(),HttpStatus.OK);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(),HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/search_wallet")
+	public ResponseEntity<Map<String, Object>> getByWallet(@RequestParam("walletId") int walletId,
+			@RequestParam(defaultValue ="0") int pageNo,
+			@RequestParam(defaultValue ="10") int pageSize,
+			@RequestParam(defaultValue ="id") String sortBy){
+		try {
+			Map<String, Object> list = productGameCodeService.getGameCodeByWallet(walletId, pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(list, new HttpHeaders(),HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(),HttpStatus.BAD_REQUEST);
 		}
 	}
 	
