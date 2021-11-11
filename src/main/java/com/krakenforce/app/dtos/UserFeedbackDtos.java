@@ -9,6 +9,7 @@ public class UserFeedbackDtos {
 	private int feedbackTypeId;
 	private String feedbackTypeName;
 	private String username;
+	private String email;
 	private String detail;
 
 	public UserFeedbackDtos() {
@@ -86,6 +87,18 @@ public class UserFeedbackDtos {
 	public void setUsername(String username) {
 		this.username = username;
 	}
+
+
+	public String getEmail() {
+		return email;
+	}
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
+	
 	
 	
 

@@ -170,6 +170,19 @@ public class StatisticsController {
 			return new ResponseEntity<List<UserStats>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	@GetMapping("/user_time")
+	public ResponseEntity<List<UserStats>> getUserStat(@RequestParam("startTime") String startTime,
+			@RequestParam("endTime") String endTime){
+		try {
+			Timestamp start = Timestamp.valueOf(startTime);
+			Timestamp end = Timestamp.valueOf(endTime);
+			List<UserStats> list = orderService.getTotalByUserByTime(start, end);
+			return new ResponseEntity<List<UserStats>>(list, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<List<UserStats>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
 	// show on table
 	
 }

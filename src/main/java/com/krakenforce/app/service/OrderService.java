@@ -197,5 +197,9 @@ public class OrderService {
 		return userStatisticRepository.getSumTotalUser();
 	}
 	
+	public List<UserStats> getTotalByUserByTime(Timestamp startTime, Timestamp endTime){
+		return userStatisticRepository.getSumTotalUserByTime(startTime, endTime);
+	}
+	
 	
 }

@@ -76,16 +76,15 @@ public class AuthController {
 
 	@Autowired
 	RefreshTokenService refreshTokenService;
-	
+
 	@Autowired
 	WalletService walletService;
-	
+
 	@Autowired
 	ShoppingCartService shoppingCartService;
-	
+
 	@Autowired
 	private JavaMailSender mailSender;
-	
 
 	@Autowired
 	JwtUtils jwtUtils;
@@ -105,12 +104,13 @@ public class AuthController {
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 		List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
 				.collect(Collectors.toList());
-		
+
 		refreshTokenService.deleteByUserId(userDetails.getId());
 		RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
 		return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(),
-				userDetails.getUsername(), userDetails.getEmail(),userDetails.getCartId(), userDetails.getWalletId(), userDetails.getWalletBalance(), userDetails.getAvatarImageUrl(), roles));
+				userDetails.getUsername(), userDetails.getEmail(), userDetails.getCartId(), userDetails.getWalletId(),
+				userDetails.getWalletBalance(), userDetails.getAvatarImageUrl(), roles));
 	}
 
 	/**
@@ -164,15 +164,15 @@ public class AuthController {
 		return ResponseEntity.ok(new MessageResponse("User registered successfully"));
 
 	}
-	
-	//use to add cart and wallet to new user
+
+	// use to add cart and wallet to new user
 	public void addCartAndWallet(Users user) {
 		Wallet newWallet = new Wallet();
 		newWallet.setBalance(0);
 		newWallet.setStatus(true);
 		newWallet.setUser(user);
 		walletService.add(newWallet);
-		
+
 		ShoppingCart shoppingCart = new ShoppingCart();
 		shoppingCart.setStatus(true);
 		shoppingCart.setUser(user);
@@ -189,79 +189,75 @@ public class AuthController {
 	public ResponseEntity<?> refreshtoken(@RequestBody TokenRefreshRequest request) {
 		String requestRefreshToken = request.getRefreshToken();
 
-		return refreshTokenService.findByToken(requestRefreshToken)
-				.map(refreshTokenService::verifyExpiration)
+		return refreshTokenService.findByToken(requestRefreshToken).map(refreshTokenService::verifyExpiration)
 				.map(RefreshToken::getUser).map(user -> {
 					String token = jwtUtils.generateTokenFromUsername(user.getUsername());
 					return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
 				})
 				.orElseThrow(() -> new TokenRefreshException(requestRefreshToken, "Refresh token is not in database!"));
 	}
-	
+
 	/**
 	 * use to process forgot password token
+	 * 
 	 * @return
 	 */
 	@PostMapping("/forgot_password")
-	public ResponseEntity<MessageResponse>  processForgotPassword(@RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+	public ResponseEntity<MessageResponse> processForgotPassword(
+			@RequestBody ForgotPasswordRequest forgotPasswordRequest) {
 		String email = forgotPasswordRequest.getEmail();
-		String token = RandomString.make(30);	
+		String token = RandomString.make(30);
 		try {
 			usersService.updateResetPasswordToken(token, email);
-			String resetPasswordLink = "http://localhost:4000" + "/reset_password?token=" + token;		
+			String resetPasswordLink = "http://localhost:4000" + "/reset_password?token=" + token;
 			sendEmail(email, resetPasswordLink);
-			return new ResponseEntity<MessageResponse>(new MessageResponse("Sent email, check your email"), new HttpHeaders(), HttpStatus.OK);
-		}catch(UsersNotFoundException e) {
-			return new ResponseEntity<MessageResponse>(new MessageResponse("Sent email fail, user not found"), new HttpHeaders(), HttpStatus.BAD_REQUEST);
-		}catch (UnsupportedEncodingException | MessagingException e) {
-			return new ResponseEntity<MessageResponse>(new MessageResponse("Error while sending email"), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<MessageResponse>(new MessageResponse("Sent email, check your email"),
+					new HttpHeaders(), HttpStatus.OK);
+		} catch (UsersNotFoundException e) {
+			return new ResponseEntity<MessageResponse>(new MessageResponse("Sent email fail, user not found"),
+					new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		} catch (UnsupportedEncodingException | MessagingException e) {
+			return new ResponseEntity<MessageResponse>(new MessageResponse("Error while sending email"),
+					new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
-	
-	
-	
+
 	/**
 	 * use to process reset password
+	 * 
 	 * @return
 	 */
 	@PostMapping("/reset_password")
-	public ResponseEntity<?> processResetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest ) {
+	public ResponseEntity<?> processResetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
 		Users user = usersService.getByResetPasswordToken(resetPasswordRequest.getToken());
-		if(user == null) {
+		if (user == null) {
 			throw new UsersNotFoundException("Not found user");
-		}else {
+		} else {
 			usersService.updatePassword(user, resetPasswordRequest.getPassword());
 			return ResponseEntity.ok(null);
 		}
 	}
-	
 
-	
-	public void sendEmail(String recipientEmail, String link)
-			throws MessagingException, UnsupportedEncodingException{
-				
-				MimeMessage message = mailSender.createMimeMessage();              
-			    MimeMessageHelper helper = new MimeMessageHelper(message);
-			    
-			    helper.setFrom("krakenshp@shopme.com", "Shop Support");
-			    helper.setTo(recipientEmail);
-			     
-			    String subject = "Here's the link to reset your password";
-			     
-			    String content = "<p>Hello,</p>"
-			            + "<p>You have requested to reset your password.</p>"
-			            + "<p>Click the link below to change your password:</p>"
-			            + "<p><a href=\"" + link + "\">Change my password</a></p>"
-			            + "<br>"
-			            + "<p>Ignore this email if you do remember your password, "
-			            + "or you have not made the request.</p>";
-			     
-			    helper.setSubject(subject);
-			     
-			    helper.setText(content, true);
-			     
-			    mailSender.send(message);
-			}
-	
+	public void sendEmail(String recipientEmail, String link) throws MessagingException, UnsupportedEncodingException {
+
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+
+		helper.setFrom("krakenshp@shopme.com", "Shop Support");
+		helper.setTo(recipientEmail);
+
+		String subject = "Here's the link to reset your password";
+
+		String content = "<p>Hello,</p>" + "<p>You have requested to reset your password.</p>"
+				+ "<p>Click the link below to change your password:</p>" + "<p><a href=\"" + link
+				+ "\">Change my password</a></p>" + "<br>" + "<p>Ignore this email if you do remember your password, "
+				+ "or you have not made the request.</p>";
+
+		helper.setSubject(subject);
+
+		helper.setText(content, true);
+
+		mailSender.send(message);
+	}
 
 }

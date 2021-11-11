@@ -135,7 +135,7 @@ public class UserFeedbackService {
 			dtos.setDateTime(item.getDateTime());
 			dtos.setUserId(item.getUser().getUserId());
 			dtos.setUsername(item.getUser().getUsername());
-			
+			dtos.setEmail(item.getUser().getEmail());
 			dtosList.add(dtos);
 		}
 		return dtosList;
