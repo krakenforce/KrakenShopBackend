@@ -1,16 +1,22 @@
 package com.krakenforce.app.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,8 +34,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.krakenforce.app.dtos.UserFeedbackDtos;
 import com.krakenforce.app.dtos.UserLogDtos;
+import com.krakenforce.app.dtos.UserUpdateModel;
 import com.krakenforce.app.dtos.UsersDtos;
 import com.krakenforce.app.enums.ERole;
+import com.krakenforce.app.exception.UsersNotFoundException;
 import com.krakenforce.app.model.FeedbackType;
 import com.krakenforce.app.model.ProductComment;
 import com.krakenforce.app.model.UserFeedback;
@@ -70,44 +78,42 @@ public class UserController {
 	@Autowired
 	ProductCommentService productCommentService;
 
+	@Autowired
+	private JavaMailSender mailSender;
+
 	@GetMapping()
-	//@PreAuthorize("hasRole('ADMIN')")
+	// @PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Map<String, Object>> getAllUser(@RequestParam(defaultValue = "0") Integer pageNo,
-			@RequestParam(defaultValue = "10") Integer pageSize,
-			@RequestParam(defaultValue = "userId") String sortBy) {
+			@RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "userId") String sortBy) {
 		try {
-			Map<String, Object> response = usersService.getAllUser(pageNo, pageSize, sortBy);	
+			Map<String, Object> response = usersService.getAllUser(pageNo, pageSize, sortBy);
 			return ResponseEntity.ok(response);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity<Map<String,Object>>(null, new HttpHeaders(), HttpStatus.FORBIDDEN);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.FORBIDDEN);
 		}
-		
+
 	}
-	
+
 	@GetMapping("/search-username")
 	public ResponseEntity<Map<String, Object>> getUserByUsername(@RequestParam("username") String username,
-			@RequestParam(defaultValue = "0") Integer pageNo,
-			@RequestParam(defaultValue = "10") Integer pageSize,
+			@RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize,
 			@RequestParam(defaultValue = "user_id") String sortBy) {
-		Map<String, Object> response = usersService.getUserByUsername(username, pageNo, pageSize, sortBy);	
+		Map<String, Object> response = usersService.getUserByUsername(username, pageNo, pageSize, sortBy);
 		return ResponseEntity.ok(response);
 	}
-	
+
 	@GetMapping("/search-role")
 	public ResponseEntity<Map<String, Object>> getUserByRole(@RequestParam("keyword") String keyword,
-			@RequestParam(defaultValue = "0") Integer pageNo,
-			@RequestParam(defaultValue = "10") Integer pageSize,
+			@RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize,
 			@RequestParam(defaultValue = "userId") String sortBy) {
 		ERole role = ERole.valueOf(keyword);
-		Map<String, Object> response = usersService.getUserByRole(role, pageNo, pageSize, sortBy);	
+		Map<String, Object> response = usersService.getUserByRole(role, pageNo, pageSize, sortBy);
 		return ResponseEntity.ok(response);
 	}
-	
-	
 
 	@GetMapping("/{userId}")
-	//@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+	// @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
 	public ResponseEntity<UsersDtos> getUserById(@PathVariable("userId") int userId) {
 		Users user = usersRepository.findById(userId).orElse(null);
 		if (user != null) {
@@ -133,35 +139,50 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 		}
 	}
-	
+
 	@PutMapping("/update_password")
 	public ResponseEntity<MessageResponse> updateUserPassword(@RequestParam("userId") int userId,
-			@RequestParam("password") String password){
+			@RequestParam("password") String password) {
 		try {
 			Users user = usersService.getById(userId);
 			usersService.updatePassword(user, password);
-			return new ResponseEntity<MessageResponse>(new MessageResponse("Change password success"), new HttpHeaders(), HttpStatus.OK);
+			return new ResponseEntity<MessageResponse>(new MessageResponse("Change password success"),
+					new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<MessageResponse>(new MessageResponse("Change password fail"), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<MessageResponse>(new MessageResponse("Change password fail"), new HttpHeaders(),
+					HttpStatus.BAD_REQUEST);
 		}
 	}
-	
 
 	@PutMapping(consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE })
 	// @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
-	public ResponseEntity<?> updateUserInfo(@RequestPart("user") Users user,
-			@RequestPart("avatar") MultipartFile avatar) {
+	public ResponseEntity<MessageResponse> updateUserInfo(
+			@RequestPart(value = "userUpdateModel", required = true) UserUpdateModel user,
+			@RequestPart(value = "avatar", required = false) MultipartFile avatar) {
 
-		String fileUri = getImagePath(avatar);
-		Users selectedUser = usersRepository.findById(user.getUserId()).orElse(null);
-		if (selectedUser != null) {
-			user.setAvatarImageUrl(fileUri);
-			selectedUser = user;
+		try {
+			Users selectedUser = usersRepository.findById(user.getUserId()).orElse(null);		
+			if (avatar != null) {
+				String fileUri = getImagePath(avatar);
+				selectedUser.setAvatarImageUrl(fileUri);
+			}
+			selectedUser.setFirstName(user.getFirstName());
+			selectedUser.setLastName(user.getLastName());
+			selectedUser.setEmail(user.getEmail());
+			selectedUser.setPhone(user.getPhone());
+			selectedUser.setIdentityNumber(user.getIdentityNumber());
+			selectedUser.setGender(user.getGender());
+			selectedUser.setMarriageStatus(user.isMarriage());
+			selectedUser.setAddress(user.getAddress());
+			selectedUser.setJob(user.getJob());
 			usersRepository.save(selectedUser);
-			return ResponseEntity.ok(selectedUser);
-		} else {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("Not Found user"));
+			return ResponseEntity.ok(new MessageResponse("update success"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<MessageResponse>(new MessageResponse("update fail"), new HttpHeaders(),
+					HttpStatus.BAD_REQUEST);
 		}
+
 	}
 
 	/* use to get Image path when upload */
@@ -295,16 +316,22 @@ public class UserController {
 
 	@PostMapping("/feedback")
 	public ResponseEntity<UserFeedback> addUserFeedback(@RequestBody UserFeedback userFeedback,
-			@RequestParam("feedbackType") String feedbackTypeStr) {
-		FeedbackType feedbackType = feedbackTypeService.getByName(feedbackTypeStr);
-		if (userFeedback != null && feedbackType != null) {
-			userFeedback.setFeedbackType(feedbackType);
-			userFeedbackService.add(userFeedback);
+			@RequestParam("feedbackType") String feedbackTypeStr, @RequestParam("userId") int userId) {
+		try {
+			FeedbackType feedbackType = feedbackTypeService.getByName(feedbackTypeStr);
+			Users user = usersService.getById(userId);
 
+			userFeedback.setUser(user);
+			userFeedback.setFeedbackType(feedbackType);
+			Timestamp nowMoment = Timestamp.from(Instant.now());
+			userFeedback.setDateTime(nowMoment);
+			userFeedbackService.add(userFeedback);
 			return ResponseEntity.ok(userFeedback);
-		} else {
+		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.badRequest().body(null);
 		}
+
 	}
 
 	@DeleteMapping("/feedback/{feedbackId}")
@@ -315,8 +342,7 @@ public class UserController {
 
 	@GetMapping("/feedback")
 	public ResponseEntity<Map<String, Object>> getAllUserFeedback(@RequestParam(defaultValue = "0") Integer pageNo,
-			@RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "id") String sortBy) 
-	{
+			@RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "id") String sortBy) {
 		try {
 			Map<String, Object> response = userFeedbackService.getAllUserFeedback(pageNo, pageSize, sortBy);
 			return new ResponseEntity<Map<String, Object>>(response, new HttpHeaders(), HttpStatus.OK);
@@ -356,6 +382,44 @@ public class UserController {
 		} catch (Exception e) {
 			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	@PostMapping("/feedback/reply")
+	public ResponseEntity<MessageResponse> sendFeedbackReply(@RequestParam("detail") String detail,
+			@RequestParam("recipientEmail") String recipientEmail) {
+		try {
+			sendEmail(recipientEmail, detail);
+			return new ResponseEntity<MessageResponse>(new MessageResponse("Sent Email"), new HttpHeaders(),
+					HttpStatus.OK);
+		} catch (UsersNotFoundException e) {
+			return new ResponseEntity<MessageResponse>(new MessageResponse("Sent email fail, user not found"),
+					new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		} catch (UnsupportedEncodingException | MessagingException e) {
+			return new ResponseEntity<MessageResponse>(new MessageResponse("Error while sending email"),
+					new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	public void sendEmail(String recipientEmail, String detail)
+			throws MessagingException, UnsupportedEncodingException {
+
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+
+		helper.setFrom("krakenshp@shopme.com", "Shop Support");
+		helper.setTo(recipientEmail);
+
+		String subject = "Thank you for giving us feedback";
+
+		String content = "<p>Hello,</p>" + "<p>You have sent us feedback.</p>" + "<p>This is our answer:</p>" + "<p>"
+				+ detail + "<p>"
+				+ "<p><strong>Thank you for using our service. We look forward to serving you again in the future. Dear</strong><p>";
+
+		helper.setSubject(subject);
+
+		helper.setText(content, true);
+
+		mailSender.send(message);
 	}
 
 	// ==============================================================================================================

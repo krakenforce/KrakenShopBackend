@@ -41,6 +41,19 @@ public class StatisticsController {
 		}
 	}
 	
+	@GetMapping("/total_revenue_time")
+	public ResponseEntity<Float> getTotalRevenueByTime(@RequestParam("startTime") String startTime,
+			@RequestParam("endTime") String endTime){
+		try {
+			Timestamp start = Timestamp.valueOf(startTime);
+			Timestamp end = Timestamp.valueOf(endTime);
+			float total = orderService.getRevenueByTime(start, end);
+			return new ResponseEntity<Float>(total, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Float>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	//-- revunue by time
 	@GetMapping("/revenue_time")
 	public ResponseEntity<Float> getRevenueByTime(@RequestParam("startTime") String startTime,
@@ -70,6 +83,20 @@ public class StatisticsController {
 		}
 	}
 	
+	@GetMapping("/product_time")
+	public ResponseEntity<List<ProductStats>> getProductStatByTime(@RequestParam("startTime") String startTime,
+			@RequestParam("endTime") String endTime){
+		try {
+			Timestamp start = Timestamp.valueOf(startTime);
+			Timestamp end = Timestamp.valueOf(endTime);
+			List<ProductStats> list = orderService.getCountOfProductByTime(start, end);
+			return new ResponseEntity<List<ProductStats>>(list, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<List<ProductStats>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	@GetMapping("/product/user_id")
 	public ResponseEntity<List<ProductStats>> getProductStatByUser(@RequestParam("userId") int userId){
 		try {
@@ -91,11 +118,40 @@ public class StatisticsController {
 			return new ResponseEntity<List<CategogyStats>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	@GetMapping("/category_time")
+	public ResponseEntity<List<CategogyStats>> getCategoryStatByTime(@RequestParam("startTime") String startTime,
+			@RequestParam("endTime") String endTime){
+		try {
+			Timestamp start = Timestamp.valueOf(startTime);
+			Timestamp end = Timestamp.valueOf(endTime);
+			List<CategogyStats> list = orderService.getCountOfCategoryByTime(start, end);
+			return new ResponseEntity<List<CategogyStats>>(list, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<List<CategogyStats>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	// number sale by tag
 	@GetMapping("/tag")
 	public ResponseEntity<List<TagStats>> getTagStat(){
 		try {
 			List<TagStats> list = orderService.getCountOfTag();
+			return new ResponseEntity<List<TagStats>>(list, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<List<TagStats>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/tag_time")
+	public ResponseEntity<List<TagStats>> getTagStatByTime(@RequestParam("startTime") String startTime,
+			@RequestParam("endTime") String endTime){
+		try {
+			Timestamp start = Timestamp.valueOf(startTime);
+			Timestamp end = Timestamp.valueOf(endTime);
+			List<TagStats> list = orderService.getCountOfTagByTime(start, end);
 			return new ResponseEntity<List<TagStats>>(list, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -109,6 +165,19 @@ public class StatisticsController {
 	public ResponseEntity<List<UserStats>> getUserStat(){
 		try {
 			List<UserStats> list = orderService.getTotalByUser();
+			return new ResponseEntity<List<UserStats>>(list, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<List<UserStats>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/user_time")
+	public ResponseEntity<List<UserStats>> getUserStat(@RequestParam("startTime") String startTime,
+			@RequestParam("endTime") String endTime){
+		try {
+			Timestamp start = Timestamp.valueOf(startTime);
+			Timestamp end = Timestamp.valueOf(endTime);
+			List<UserStats> list = orderService.getTotalByUserByTime(start, end);
 			return new ResponseEntity<List<UserStats>>(list, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<List<UserStats>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
