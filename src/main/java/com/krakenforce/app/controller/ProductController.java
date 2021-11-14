@@ -381,15 +381,15 @@ public class ProductController {
 	}
 	
 	@GetMapping("/comment/user/{userId}")
-	public ResponseEntity<List<ProductComment>> getCommentByUser(@PathVariable("userId") int userId,
+	public ResponseEntity<Map<String, Object>> getCommentByUser(@PathVariable("userId") int userId,
 			@RequestParam(defaultValue ="0") int pageNo,
 			@RequestParam(defaultValue ="10") int pageSize,
 			@RequestParam(defaultValue ="id") String sortBy){
 		try {
-			List<ProductComment> list = productCommentService.getCommentByUser(userId, pageNo, pageSize, sortBy);
-			return new ResponseEntity<List<ProductComment>>(list, new HttpHeaders(), HttpStatus.OK);
+			Map<String, Object> list = productCommentService.getCommentByUser(userId, pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(list, new HttpHeaders(), HttpStatus.OK);
 		}catch(Exception ex) {
-			return new ResponseEntity<List<ProductComment>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -481,15 +481,15 @@ public class ProductController {
 	}
 	
 	@GetMapping("/review/user/{userId}")
-	public ResponseEntity<List<ProductReview>> getReviewByUser(@PathVariable("userId") int userId,
+	public ResponseEntity<Map<String, Object>> getReviewByUser(@PathVariable("userId") int userId,
 			@RequestParam(defaultValue ="0") int pageNo,
 			@RequestParam(defaultValue ="10") int pageSize,
 			@RequestParam(defaultValue ="id") String sortBy){
 		try {
-			List<ProductReview> list = productReviewService.getByUser(userId, pageNo, pageSize, sortBy);
-			return new ResponseEntity<List<ProductReview>>(list, new HttpHeaders(), HttpStatus.OK);
+			Map<String, Object> list = productReviewService.getByUser(userId, pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(list, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity<List<ProductReview>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 		
 	}

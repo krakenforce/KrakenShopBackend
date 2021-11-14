@@ -102,6 +102,24 @@ public class OrderService {
 		}
 	}
 	
+	public Map<String, Object> getOrderByUsername(String username, int pageNo, int pageSize, String sortBy){
+		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+		Page<Orders> pageResult = orderRepository.findOrderByUsername(username, paging);
+		if(pageResult.hasContent()) {
+			Map<String, Object> response = new HashMap<String, Object>();
+			List<Orders> list = pageResult.getContent();
+			List<OrdersDtos> dtoList = convertListToDtosList(list);
+			
+			response.put("orders", dtoList);
+			response.put("currentPage", pageResult.getNumber());
+			response.put("totalItems", pageResult.getTotalElements());
+			response.put("totalPages", pageResult.getTotalPages());
+			return response;
+		}else {
+			return new HashMap<String, Object>();
+		}
+	}
+	
 	/**
 	 * use to get order list by time 
 	 * @param startTime

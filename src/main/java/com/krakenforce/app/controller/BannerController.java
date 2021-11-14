@@ -50,11 +50,13 @@ public class BannerController {
 	@PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE,
 			MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<HomePageBanner> addHomePageBanner(@RequestPart(value = "banner", required = true) HomePageBanner homePageBanner,
-			@RequestPart(value="file", required=true) MultipartFile file) {
+			@RequestPart(value="file", required=false) MultipartFile file) {
 		try {
 			BannerType type = bannerTypeService.getById(2);
 			homePageBanner.setBannerType(type);
-			homePageBanner.setImageUrl(getImagePath(file));
+			if(file != null) {
+				homePageBanner.setImageUrl(getImagePath(file));
+			}	
 			homePageBannerService.add(homePageBanner);
 			return new ResponseEntity<HomePageBanner>(homePageBanner, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception ex) {

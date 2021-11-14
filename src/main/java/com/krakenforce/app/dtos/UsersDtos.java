@@ -42,14 +42,16 @@ public class UsersDtos {
 	private int walletId;
 	private float walletBalance;
 	private Set<Product> favoriteProducts;
-	private Set<ShoppingCart> shoppingCarts ;
-	
+	private Set<ShoppingCart> shoppingCarts ;	
 	private String resetPasswordToken;
 	
 	//favorite product
 	private String favoriterProductName;
 	private int favoriteProductId;
 	
+	private int vipClassId;
+	private String vipClassName;
+	private int discountPercentage;
 	
 	private Set<ERole> roles; 
 
@@ -340,6 +342,30 @@ public class UsersDtos {
 
 	public void setResetPasswordToken(String resetPasswordToken) {
 		this.resetPasswordToken = resetPasswordToken;
+	}
+
+	public int getVipClassId() {
+		return vipClassId;
+	}
+
+	public void setVipClassId(int vipClassId) {
+		this.vipClassId = vipClassId;
+	}
+
+	public String getVipClassName() {
+		return vipClassName;
+	}
+
+	public void setVipClassName(String vipClassName) {
+		this.vipClassName = vipClassName;
+	}
+
+	public int getDiscountPercentage() {
+		return discountPercentage;
+	}
+
+	public void setDiscountPercentage(int discountPercentage) {
+		this.discountPercentage = discountPercentage;
 	}
 	
 	

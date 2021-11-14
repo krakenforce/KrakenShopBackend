@@ -56,13 +56,21 @@ public class ProductReviewService {
 		}
 	}
 
-	public List<ProductReview> getByUser(int userId, int pageNo, int pageSize, String sortBy) {
+	public Map<String, Object> getByUser(int userId, int pageNo, int pageSize, String sortBy) {
 		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 		Page<ProductReview> pageResult = productReviewRepository.findByUser(userId, paging);
 		if (pageResult.hasContent()) {
-			return pageResult.getContent();
+			Map<String, Object> response = new HashMap<String, Object>();
+			List<ProductReview> list = pageResult.getContent();
+			List<ProductReviewDtos> dtosList = convertListToDtosList(list);
+			
+			response.put("reviews", dtosList);
+			response.put("currentPage", pageResult.getNumber());
+			response.put("totalItems", pageResult.getTotalElements());
+			response.put("totalPages", pageResult.getTotalPages());
+			return response;
 		} else {
-			return new ArrayList<ProductReview>();
+			return new HashMap<String, Object>();
 		}
 	}
 
