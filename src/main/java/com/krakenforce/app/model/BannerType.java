@@ -29,6 +29,7 @@ public class BannerType {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "bannerType")
 	private Set<HomePageBanner> homePageBanners;
 
+	
 	public int getId() {
 		return id;
 	}

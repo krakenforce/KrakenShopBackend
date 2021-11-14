@@ -14,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name = "product_game_code")
 public class ProductGameCode {
@@ -30,6 +32,7 @@ public class ProductGameCode {
 	private boolean status;
 	
 	@Column(name = "created_at")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Timestamp createdAt;
 	
 	@ManyToOne(fetch = FetchType.EAGER)

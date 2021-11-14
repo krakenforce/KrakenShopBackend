@@ -1,8 +1,10 @@
 package com.krakenforce.app.model;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -95,7 +97,7 @@ public class Users {
 	@JoinTable(name = "user_role",
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private Set<Roles> roleSet;
+	private Set<Roles> roleSet = new HashSet<Roles>();
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
 	private Set<UserLog> userLogs;
@@ -113,14 +115,24 @@ public class Users {
 	@OneToOne(mappedBy = "user")
 	private Wallet wallet;
 		
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(name = "user_favorite_product",
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name = "product_id"))
-	private Set<Product> products;
+	private Set<Product> favoriteProducts;
 	
 	@OneToOne(mappedBy = "user")
 	private ShoppingCart shoppingCart ;
+
+	public Users() {
+		
+	}
+
+	public Users(String username, String email, String hashPassword) {
+		this.username = username;
+		this.email = email;
+		this.hashPassword = hashPassword;
+	}
 
 	public int getUserId() {
 		return userId;
@@ -307,12 +319,13 @@ public class Users {
 		this.wallet = wallet;
 	}
 
-	public Set<Product> getProducts() {
-		return products;
+
+	public Set<Product> getFavoriteProducts() {
+		return favoriteProducts;
 	}
 
-	public void setProducts(Set<Product> products) {
-		this.products = products;
+	public void setFavoriteProducts(Set<Product> favoriteProducts) {
+		this.favoriteProducts = favoriteProducts;
 	}
 
 	public ShoppingCart getShoppingCart() {

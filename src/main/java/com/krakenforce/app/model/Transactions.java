@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name = "transactions")
 public class Transactions {
@@ -23,7 +25,7 @@ public class Transactions {
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "payment_id")
-	private Payment payment;
+	private Payments payment;
 	
 	@Column(name = "description")
 	private String description;
@@ -38,6 +40,7 @@ public class Transactions {
 	private float provider_fee;
 	
 	@Column(name = "created_at")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Timestamp createdAt;
 	
 	@Column(name = "status")
@@ -51,11 +54,11 @@ public class Transactions {
 		this.id = id;
 	}
 
-	public Payment getPayment() {
+	public Payments getPayment() {
 		return payment;
 	}
 
-	public void setPayment(Payment payment) {
+	public void setPayment(Payments payment) {
 		this.payment = payment;
 	}
 

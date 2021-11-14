@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name = "product_comment")
 public class ProductComment {
@@ -29,6 +31,7 @@ public class ProductComment {
 	private Product product;
 	
 	@Column(name = "comment_time")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Timestamp commentTime;
 	
 	@Column(name = "content")

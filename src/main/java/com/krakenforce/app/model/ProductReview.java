@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name = "product_review")
 public class ProductReview {
@@ -38,6 +40,7 @@ public class ProductReview {
 	private boolean purchaseStatus;
 	
 	@Column(name = "created_at")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Timestamp createdAt;
 
 	public int getId() {

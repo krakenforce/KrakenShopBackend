@@ -1,7 +1,9 @@
 package com.krakenforce.app.model;
 
+import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -39,6 +41,9 @@ public class Product {
 	@Column(name = "product_detail")
 	private String productDetail;
 	
+	@Column(name = "product_warranty")
+	private String productWarranty;
+	
 	@Column(name = "status")
 	private boolean status;
 	
@@ -54,13 +59,16 @@ public class Product {
 	private ProductServicePack productServicePack;
 	
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JoinTable(name = "category_product",
 				joinColumns = @JoinColumn(name = "product_id"),
 				inverseJoinColumns = @JoinColumn(name = "category_id"))
 	private Set<Category> categories;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(mappedBy = "favoriteProducts")
+	private Set<Users> users;
+	
+	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JoinTable(name = "tag_product",
 				joinColumns = @JoinColumn(name = "product_id"),
 				inverseJoinColumns = @JoinColumn(name = "tag_id"))
@@ -72,11 +80,6 @@ public class Product {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
 	private Set<ProductImage> productImages;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
-	private Set<ProductDetail> productDetails;
-	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
-	private Set<ProductWarranty> productWarranties;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
 	private Set<ProductComment> productComments ;
@@ -200,21 +203,6 @@ public class Product {
 		this.productImages = productImages;
 	}
 
-	public Set<ProductDetail> getProductDetails() {
-		return productDetails;
-	}
-
-	public void setProductDetails(Set<ProductDetail> productDetails) {
-		this.productDetails = productDetails;
-	}
-
-	public Set<ProductWarranty> getProductWarranties() {
-		return productWarranties;
-	}
-
-	public void setProductWarranties(Set<ProductWarranty> productWarranties) {
-		this.productWarranties = productWarranties;
-	}
 
 	public Set<ProductComment> getProductComments() {
 		return productComments;
@@ -239,6 +227,44 @@ public class Product {
 	public void setProductReviews(Set<ProductReview> productReviews) {
 		this.productReviews = productReviews;
 	}
+
+	public Set<Users> getUsers() {
+		return users;
+	}
+
+	public void setUsers(Set<Users> users) {
+		this.users = users;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, price, productGameCodes, productId, productReviews);
+	}
+	
+
+	public String getProductWarranty() {
+		return productWarranty;
+	}
+
+	public void setProductWarranty(String productWarranty) {
+		this.productWarranty = productWarranty;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Product other = (Product) obj;
+		return Objects.equals(name, other.name) && Float.floatToIntBits(price) == Float.floatToIntBits(other.price)
+				&& Objects.equals(productGameCodes, other.productGameCodes) && productId == other.productId
+				&& Objects.equals(productReviews, other.productReviews);
+	}
+	
+	
 	
 	
 
