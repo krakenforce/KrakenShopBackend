@@ -18,7 +18,7 @@ public class UserDetailsImpl implements UserDetails {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private int id;
 	private String username;
 	private String email;
@@ -26,14 +26,16 @@ public class UserDetailsImpl implements UserDetails {
 	private int cartId;
 	private float walletBalance;
 	private String avatarImageUrl;
-	
+	private String vipClassName;
+	private int discountPercentage;
+
 	@JsonIgnore
 	private String password;
-	
+
 	private Collection<? extends GrantedAuthority> authorities;
 
-	public UserDetailsImpl(int id, String username, String email, int cartId, int walletId, float walletBalance,String avatarImageUrl,
-			String password,
+	public UserDetailsImpl(int id, String username, String email, int cartId, int walletId, float walletBalance,
+			String avatarImageUrl, String password,
 			Collection<? extends GrantedAuthority> authorities) {
 		this.id = id;
 		this.username = username;
@@ -45,22 +47,14 @@ public class UserDetailsImpl implements UserDetails {
 		this.password = password;
 		this.authorities = authorities;
 	}
-	
+
 	public static UserDetailsImpl build(Users user) {
 		List<GrantedAuthority> authorities = user.getRoleSet().stream()
-				.map(role -> new SimpleGrantedAuthority(role.getName().name()))
-				.collect(Collectors.toList());
-		return new UserDetailsImpl(
-					user.getUserId(),
-					user.getUsername(),
-					user.getEmail(),
-					user.getShoppingCart().getId(),
-					user.getWallet().getId(),
-					user.getWallet().getBalance(),
-					user.getAvatarImageUrl(),
-					user.getHashPassword(),
-					authorities				
-				);
+				.map(role -> new SimpleGrantedAuthority(role.getName().name())).collect(Collectors.toList());
+		
+		return new UserDetailsImpl(user.getUserId(), user.getUsername(), user.getEmail(),
+				user.getShoppingCart().getId(), user.getWallet().getId(), user.getWallet().getBalance(),
+				user.getAvatarImageUrl(), user.getHashPassword(), authorities);
 	}
 
 	@Override
@@ -68,8 +62,6 @@ public class UserDetailsImpl implements UserDetails {
 		// TODO Auto-generated method stub
 		return authorities;
 	}
-	
-	
 
 	public int getWalletId() {
 		return walletId;
@@ -138,9 +130,7 @@ public class UserDetailsImpl implements UserDetails {
 		// TODO Auto-generated method stub
 		return true;
 	}
-	
-	
-	
+
 	public float getWalletBalance() {
 		return walletBalance;
 	}
@@ -148,8 +138,6 @@ public class UserDetailsImpl implements UserDetails {
 	public void setWalletBalance(float walletBalance) {
 		this.walletBalance = walletBalance;
 	}
-	
-	
 
 	public String getAvatarImageUrl() {
 		return avatarImageUrl;
@@ -161,12 +149,44 @@ public class UserDetailsImpl implements UserDetails {
 
 	@Override
 	public boolean equals(Object obj) {
-		if(this == obj)
+		if (this == obj)
 			return true;
-		if(obj == null || getClass() != obj.getClass())
+		if (obj == null || getClass() != obj.getClass())
 			return false;
 		UserDetailsImpl user = (UserDetailsImpl) obj;
 		return Objects.equals(id, user.id);
 	}
-	
+
+	public String getVipClassName() {
+		return vipClassName;
+	}
+
+	public void setVipClassName(String vipClassName) {
+		this.vipClassName = vipClassName;
+	}
+
+	public int getDiscountPercentage() {
+		return discountPercentage;
+	}
+
+	public void setDiscountPercentage(int discountPercentage) {
+		this.discountPercentage = discountPercentage;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+		this.authorities = authorities;
+	}
+
 }

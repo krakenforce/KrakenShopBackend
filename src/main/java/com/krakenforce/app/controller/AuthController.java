@@ -111,6 +111,7 @@ public class AuthController {
 		return ResponseEntity.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(),
 				userDetails.getUsername(), userDetails.getEmail(), userDetails.getCartId(), userDetails.getWalletId(),
 				userDetails.getWalletBalance(), userDetails.getAvatarImageUrl(), roles));
+
 	}
 
 	/**

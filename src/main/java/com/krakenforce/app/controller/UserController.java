@@ -39,7 +39,6 @@ import com.krakenforce.app.dtos.UsersDtos;
 import com.krakenforce.app.enums.ERole;
 import com.krakenforce.app.exception.UsersNotFoundException;
 import com.krakenforce.app.model.FeedbackType;
-import com.krakenforce.app.model.ProductComment;
 import com.krakenforce.app.model.UserFeedback;
 import com.krakenforce.app.model.UserLog;
 import com.krakenforce.app.model.Users;
@@ -134,6 +133,12 @@ public class UserController {
 			dtos.setLastLogin(user.getLastLogin());
 			dtos.setStatus(user.isStatus());
 			dtos.setResetPasswordToken(user.getResetPasswordToken());
+			if(user.getUserVipClass() != null) {
+				dtos.setVipClassId(user.getUserVipClass().getId());
+				dtos.setVipClassName(user.getUserVipClass().getClassName());
+				dtos.setDiscountPercentage(user.getUserVipClass().getDiscountPercentage());
+			}
+			
 			return ResponseEntity.ok(dtos);
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -429,14 +434,14 @@ public class UserController {
 	 */
 
 	@GetMapping("/comment/{userId}")
-	public ResponseEntity<List<ProductComment>> getCommentByProduct(@PathVariable("userId") int userId,
+	public ResponseEntity<Map<String, Object>> getCommentByProduct(@PathVariable("userId") int userId,
 			@RequestParam(defaultValue = "0") int pageNo, @RequestParam(defaultValue = "10") int pageSize,
 			@RequestParam(defaultValue = "user_id") String sortBy) {
 		try {
-			List<ProductComment> list = productCommentService.getCommentByUser(userId, pageNo, pageSize, sortBy);
-			return new ResponseEntity<List<ProductComment>>(list, new HttpHeaders(), HttpStatus.OK);
+			Map<String, Object> list = productCommentService.getCommentByUser(userId, pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(list, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception ex) {
-			return new ResponseEntity<List<ProductComment>>(null, new HttpHeaders(), HttpStatus.OK);
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.OK);
 		}
 	}
 

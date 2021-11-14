@@ -97,13 +97,21 @@ public class ProductCommentService {
 	 * @param sortBy
 	 * @return List<ProductComment>
 	 */
-	public List<ProductComment> getCommentByUser(int userId, Integer pageNo, Integer pageSize, String sortBy){
+	public Map<String, Object> getCommentByUser(int userId, Integer pageNo, Integer pageSize, String sortBy){
 		Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 		Page<ProductComment> pageResult = productCommentRepository.findCommentByUser(userId, paging);
 		if(pageResult.hasContent()) {
-			return pageResult.getContent();
+			Map<String, Object> response = new HashMap<String, Object>();
+			List<ProductComment> list = pageResult.getContent();
+			List<ProductCommentDtos> dtosList = convertListToDtosList(list);
+			
+			response.put("comments", dtosList);
+			response.put("currentPage", pageResult.getNumber());
+			response.put("totalItems", pageResult.getTotalElements());
+			response.put("totalPages", pageResult.getTotalPages());
+			return response;
 		}else {
-			return new ArrayList<ProductComment>();
+			return new HashMap<String, Object>();
 		}
 	}
 	

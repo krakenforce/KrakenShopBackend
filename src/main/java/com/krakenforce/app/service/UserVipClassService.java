@@ -46,7 +46,8 @@ public class UserVipClassService {
 			return new HashMap<String, Object>();
 		}
 		
-	}
+	}	
+	
 	
 	public List<UserVipClassDtos> convertListToDtos(List<UserVipClass> userVipClasses){
 		List<UserVipClassDtos> dtoList = new ArrayList<UserVipClassDtos>();

@@ -60,6 +60,8 @@ public class UserVipClassController {
 		}
 		
 	}
+	
+	
 
 	@GetMapping("/{vipClassId}")
 	public ResponseEntity<Map<String, Object>> getUserByVipClass(@PathVariable("vipClassId") int vipClassId,

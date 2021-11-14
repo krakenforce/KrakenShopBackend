@@ -157,7 +157,21 @@ public class OrderController {
 			@RequestParam(defaultValue = "10") int pageSize,
 			@RequestParam(defaultValue = "id") String sortBy){
 		try {
-			Map<String, Object> response = orderService.getAll(pageNo, pageSize, sortBy);
+			Map<String, Object> response = orderService.getOrderByUser(walletId, pageNo, pageSize, sortBy);
+			return new ResponseEntity<Map<String, Object>>(response, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Map<String, Object>>(null, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
+	@GetMapping("/search_username")
+	public ResponseEntity<Map<String, Object>> getByUsername(@RequestParam("keyword") String keyword,
+			@RequestParam(defaultValue = "0") int pageNo,
+			@RequestParam(defaultValue = "10") int pageSize,
+			@RequestParam(defaultValue = "id") String sortBy){
+		try {
+			Map<String, Object> response = orderService.getOrderByUsername(keyword, pageNo, pageSize, sortBy);
 			return new ResponseEntity<Map<String, Object>>(response, new HttpHeaders(), HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
